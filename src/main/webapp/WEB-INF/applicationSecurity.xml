@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- enable use-expressions -->
+    <http auto-config="true" use-expressions="true">
+        <intercept-url pattern="/admin**" access="hasRole('ROLE_ADMIN')" />
+        <intercept-url pattern="/profile" access="hasRole('ROLE_USER')" />
+        <intercept-url pattern="/aircrafts" access="hasRole('ROLE_ADMIN') or hasRole('ROLE_AIRCRAFTMANAGER')" />
+
+        <!-- access denied page -->
+        <access-denied-handler error-page="/403" />
+        <form-login
+                login-page="/login"
+                default-target-url="/main"
+                authentication-failure-url="/login?error"
+                username-parameter="username"
+                password-parameter="password" />
+        <logout logout-success-url="/main" delete-cookies="JSESSIONID"/>
+        <!-- enable csrf protection -->
+        <csrf/>
+        <remember-me
+                token-validity-seconds="1209600"
+                remember-me-parameter="remember-me"
+                data-source-ref="dataSource"/>
+    </http>
+
+    <!-- Persistent Remember Me Service -->
+    <beans:bean id="rememberMeAuthenticationProvider" class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">
+        <beans:constructor-arg value="myAppKey"/>
+        <beans:constructor-arg ref="jdbcTokenRepository"/>
+        <beans:constructor-arg ref="userDetailsServiceImpl"/>
+    </beans:bean>
+
+    <!-- Uses a database table to maintain a set of persistent login data
+     ПРИ первом запуске создать таблицу скриптом либо установить параметр true, а потом поставить снова false-->
+    <beans:bean id="jdbcTokenRepository" class="org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl">
+        <beans:property name="createTableOnStartup" value="false"/>
+        <beans:property name="dataSource" ref="dataSource"/>
+    </beans:bean>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="userDetailsServiceImpl">
+            <password-encoder ref="encoder"/>
+        </authentication-provider>
+    </authentication-manager>
+
+    <beans:bean id="userDetailsServiceImpl" class="security.UserDetailsServiceImpl"/>
+
+    <beans:bean id="encoder"
+                class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <beans:constructor-arg name="strength" value="11"/>
+    </beans:bean>
+
+</beans:beans>

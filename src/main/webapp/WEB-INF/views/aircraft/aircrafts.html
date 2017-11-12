@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Simbirsoft Aircrafts</title>
+    <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}" />
+</head>
+<body>
+<div th:replace="fragments/header :: header">Header</div>
+<div class="container">
+    <div class="text-center">
+        <h2 th:text="'Aircraft list'"></h2>
+    </div>
+
+    <table class="table table-condensed">
+    <thead>
+    <tr>
+        <td>Id</td>
+        <td>Name</td>
+    </tr>
+    </thead>
+    <tr th:each="aircraft : ${aircraftList}">
+        <td><a href="#" th:text="${aircraft.id}">1</a></td>
+        <td th:text="${aircraft.name}">Title ...</td>
+    </tr>
+</table>
+    <form th:action="@{/newAircraft}">
+        <button class="btn btn-lg btn-primary" type="Submit" th:text="Create"></button>
+    </form>
+</div>
+<div class="text-center" th:insert="~{fragments/footer :: footer}">&copy; 2017 Simbirsoft</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+</body>
+</html>
