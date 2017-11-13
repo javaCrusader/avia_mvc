@@ -71,18 +71,6 @@ public class CrewService {
         return companyRoleRepository.getOne(id);
     }
 
-
-    @Transactional
-    public boolean update(CrewMember member) {
-        CrewMember old = crewRepository.findOne(member.getId());
-        if (old == null)
-            return false;
-        old.setName(member.getName());
-        old.setVacation(member.getVacation());
-        old.setFunction(member.getFunction());
-        return crewRepository.save(old) != null;
-    }
-
     @Transactional
     public boolean delete(Integer id) {
         if (crewRepository.getOne(id) == null)

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Profile</title>
+    <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/core.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="/resources/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <div class="text-center">
+        <h2 th:text="'Crew member'"></h2>
+    </div>
+    <form th:action="@{/newCrewMember}" method="post" th:object="${member}">
+        <input type="hidden" name="cmd" th:value="${cmd}"/>
+        <input type="hidden" th:field="*{id}"/>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Crew member name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control form-control-lg" th:field="*{name}"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Crew member hour salary</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control form-control-lg" th:field="*{salaryInHour}"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Crew member vacation start</label>
+            <div class="col-sm-10">
+                <!-- <input type="date" th:value="${member.vacation.end}" class="form-control form-control-lg" th:field="*{vacation.start}"/> -->
+                <input type="date" th:type="date" class="form-control" th:field="*{vacation.start}" />
+            </div>
+        </div>
+        <div class="form-group row">
+
+            <label class="col-sm-2 col-form-label col-form-label-lg">Crew member vacation end</label>
+            <div class="col-sm-10">
+                <!-- <input type="date" th:value="${member.vacation.end}" class="form-control form-control-lg" th:field="*{vacation.end}"/> -->
+                <input type="date" th:type="date" class="form-control" th:field="*{vacation.end}" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Crew member function</label>
+            <div class="col-sm-10">
+                <select th:field="*{function.id}">
+                    <option th:each="function : ${companyRoleList}" th:value="${function.id}" th:text="${function.name}"></option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-13">
+                <button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
+                <button type="submit" class="btn btn-primary" name="submit" value="cancel">Cancel</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="text-center" th:insert="~{fragments/footer :: footer}">&copy; 2017 Simbirsoft</div>
+</body>
+</html>

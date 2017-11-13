@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Simbirsoft Crew</title>
+    <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}" />
+</head>
+<body>
+<div th:replace="fragments/header :: header">Header</div>
+<div class="container">
+    <div class="text-center">
+        <h2 th:text="'Crew list'"></h2>
+    </div>
+    <div class="text-left">
+        <span th:utext="${message}"></span>
+    </div>
+
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>Hour salary</td>
+            <td>Function</td>
+            <td>Vacation start</td>
+            <td>Vacation end</td>
+        </tr>
+        </thead>
+        <tr th:each="crewMember : ${crewList}">
+            <td>
+                <form th:action="@{/newCrewMember}" method="get">
+                    <input type="hidden" name="idCrewMember" th:value="${crewMember.id}"/>
+                    <input type="hidden" name="cmd" value="edit"/>
+                    <button type="submit" class="btn btn-info" th:text="${crewMember.id}"> </button>
+                </form></td>
+            <td th:text="${crewMember.name}"></td>
+            <td th:text="${crewMember.salaryInHour}"></td>
+            <td th:text="${crewMember.function.name}"></td>
+            <td th:text="${#dates.format(crewMember.vacation.start, 'dd-MM-yyyy')}"></td>
+            <td th:text="${#dates.format(crewMember.vacation.end, 'dd-MM-yyyy')}"></td>
+            <td>
+                <form th:action="@{/crew}" method="post">
+                    <input type="hidden" name="idMember" th:value="${crewMember.id}"/>
+                    <button type="submit" class="btn btn-info">del</button>
+                </form></td>
+        </tr>
+    </table>
+    <form th:action="@{/newCrewMember}">
+        <button class="btn btn-lg btn-primary" type="Submit" th:text="Create"></button>
+        <input type="hidden" name="cmd" value="create"/>
+    </form>
+</div>
+<div class="text-center" th:insert="~{fragments/footer :: footer}">&copy; 2017 Simbirsoft</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+</body>
+</html>
