@@ -1,6 +1,8 @@
 package model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -47,6 +49,14 @@ public class CompanyRole {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public CompanyRole addCrewMember(CrewMember member) {
+        if (crewMemberSet == null) { // лямбды к сожалению в еклипслинке ломают связывание
+            crewMemberSet = new HashSet<>();
+        }
+        crewMemberSet.add(member.setFunction(this));
+        return this;
     }
 
 }

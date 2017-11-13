@@ -29,20 +29,23 @@ public class AircraftClassData {
         return placeDataSet;
     }
 
-    public void setPlaceDataSet(Set<AircraftPlaceInfo> placeDataSet) {
+    public AircraftClassData setPlaceDataSet(Set<AircraftPlaceInfo> placeDataSet) {
         this.placeDataSet = placeDataSet;
+        return this;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public AircraftClassData setId(Integer id) {
         this.id = id;
+        return this;
     }
 
-    public void setName(String name) {
+    public AircraftClassData setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getName() {

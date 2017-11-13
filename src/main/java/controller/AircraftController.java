@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import service.AircraftService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,44 +37,73 @@ public class AircraftController {
         return "aircraft/aircrafts";
     }
 
+    @RequestMapping(value = "/aircrafts", method = RequestMethod.POST)
+    public String homePost(@RequestParam(value = "idAircraft", required = false) Integer id, Model model) {
+        if (aircraftService.delete(id))
+            resultMessage = "delete ok";
+        else
+            resultMessage = "delete fail";
+        return "redirect:/aircrafts";
+    }
+
 
     /**
-     * @param model
-     * заполняем данные о допустпных классах и создаем объект самолета.
+     * @param model заполняем данные о допустпных классах и создаем объект самолета.
      * @return
      */
     //@SessionAttributes({ "aircraft"})  hz.
     @RequestMapping(value = "/newAircraft", method = RequestMethod.GET)
-    public String createAircraft(Model model) {
+    public String retrieveAircraft(Model model, @RequestParam(value = "cmd", required = true) String cmd,
+                                   @RequestParam(value = "idAircraft", required = false) Integer idAircraft) {
         logger.info("newAircraft GET");
-        Aircraft aircraft = new Aircraft();
-        List<AircraftClassData> classDataList = aircraftService.getAllClasses();
-        List<AircraftPlaceInfo> airPlaceList = new ArrayList<>();
-        AircraftPlaceInfo airPlace;
-        for (int i = 0; i < classDataList.size(); i++) {
-            airPlace = new AircraftPlaceInfo();
-            airPlace.setAirClass(classDataList.get(i));
-            airPlaceList.add(airPlace);
+        if (cmd.equals("create")) {
+            Aircraft aircraft = new Aircraft();
+            List<AircraftClassData> classDataList = aircraftService.getAllClasses();
+            List<AircraftPlaceInfo> airPlaceList = new ArrayList<>();
+            AircraftPlaceInfo airPlace;
+            for (AircraftClassData classData : classDataList) {
+                airPlace = new AircraftPlaceInfo();
+                airPlace.setAirClass(classData);
+                airPlaceList.add(airPlace);
+
+            }
+            aircraft.setPlaceInfoList(airPlaceList);
+            model.addAttribute("aircraft", aircraft);
+            model.addAttribute("cmd", "create");
         }
-        aircraft.setPlaceInfoList(airPlaceList);
-        model.addAttribute("aircraft", aircraft);
+        if (cmd.equals("edit")) {
+            Aircraft aircraft = aircraftService.get(idAircraft);
+            model.addAttribute("aircraft", aircraft);
+            model.addAttribute("cmd", "edit");
+            logger.info("add attribute for edit " + aircraft.getId());
+        }
+
         return "aircraft/newAircraft";
     }
 
 
     @RequestMapping(value = "/newAircraft", method = RequestMethod.POST)
-    public String saveCreated(@ModelAttribute Aircraft aircraft, @RequestParam(value = "submit", required = true) String cmd,
-                              BindingResult bindingResult) {
-        //model.addAttribute("aircraft", new Aircraft());
-        logger.info("pizdec" +aircraft.getName());
-        logger.info("binding errors? "+bindingResult.hasErrors());
-        for (AircraftPlaceInfo info : aircraft.getPlaceInfoList()) {
-            logger.info("id " + info.getId());
-            logger.info("capacity " + info.getCapacity());
-            logger.info("class " + info.getAirClass().getName() + info.getAirClass().toString());
-            info.setAircraft(aircraft);
+    public String commitChanges(@ModelAttribute Aircraft aircraft, @RequestParam(value = "cmd", required = true) String cmd,
+                                @RequestParam(value = "submit", required = true) String submit,
+                                BindingResult bindingResult, Model model) {
+        logger.info("in post /newAircraft " + cmd);
+        if (submit.equals("cancel"))
+            return "redirect:/aircrafts";
+        if (cmd.equals("create")) {
+            for (AircraftPlaceInfo info : aircraft.getPlaceInfoList())
+                info.setAircraft(aircraft);
+            if (aircraftService.insert(aircraft))
+                resultMessage = "create aircraft ok";
+            else
+                resultMessage = "create aircraft error";
         }
-        aircraftService.insert2(aircraft);
+        if (cmd.equals("edit")) {
+            if (aircraftService.update(aircraft))
+                resultMessage = "update aircraft ok";
+            else
+                resultMessage = "update aircraft error";
+        }
         return "redirect:/aircrafts";
+
     }
 }

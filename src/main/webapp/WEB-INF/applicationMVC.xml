@@ -7,7 +7,6 @@
              http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <mvc:annotation-driven/>
 
     <mvc:resources mapping="/resources/**" location="/web-resources/"/>
 
@@ -32,4 +31,5 @@
         <beans:property name="templateEngine" ref="templateEngine" />
     </beans:bean>
 
+    <mvc:annotation-driven/>
 </beans:beans>

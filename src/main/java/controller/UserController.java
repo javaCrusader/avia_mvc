@@ -68,8 +68,12 @@ public class UserController {
         }
         logger.info(model.toString());
         if (!bindingResult.hasErrors()) {
-            userService.insert(user);
-            model.addAttribute("successMessage", "User has been registered successfully");
+            if (userService.insert(user))
+                resultMessage = "User has been registered successfully";
+            else {
+                resultMessage = "register user fail";
+                return "redirect:/main";
+            }
             securityService.autoLogin(user.getName(), user.getPassword());
         }
         return "redirect:/main";

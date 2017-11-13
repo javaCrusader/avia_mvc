@@ -27,7 +27,10 @@ public class CrewService {
 
     Logger logger = LoggerFactory.getLogger(CrewService.class);
 
-    @Transactional
+    public boolean insert(CrewMember member) {
+        return crewRepository.save(member.setFunction(companyRoleRepository.getOne(member.getFunction().getId()))) != null;
+    }
+
     public boolean constructInsert(String name, String start, String end, String companyRole) {
         CompanyRole crewMemberRole;
         List<CompanyRole> companyRoleList = companyRoleRepository.findByName(companyRole);
@@ -48,22 +51,6 @@ public class CrewService {
         return crewRepository.save(new CrewMember(name, crewMemberRole, vac)) != null;
     }
 
-
-    @Transactional
-    public boolean insert(CrewMember member) {
-        CompanyRole crewMemberRole;
-        List<CompanyRole> companyRoleList = companyRoleRepository.findByName(member.getFunction().getName());
-        if (companyRoleList.isEmpty()) {
-            crewMemberRole = new CompanyRole();
-            crewMemberRole.setName(member.getFunction().getName());
-            crewMemberRole = companyRoleRepository.save(crewMemberRole);
-        } else {
-            crewMemberRole = companyRoleList.get(0);
-        }
-        member.setFunction(crewMemberRole);
-        return crewRepository.save(member) != null;
-    }
-
     public List<CrewMember> get(String name) {
         return crewRepository.findByName(name);
     }
@@ -72,8 +59,21 @@ public class CrewService {
         return crewRepository.findOne(id);
     }
 
+    public List<CrewMember> getAll() {
+        return crewRepository.findAllByOrderByIdAsc();
+    }
+
+    public List<CompanyRole> getAllCompanyRoles() {
+        return companyRoleRepository.findAllByOrderByIdAsc();
+    }
+
+    public CompanyRole getCompanyRole(Integer id) {
+        return companyRoleRepository.getOne(id);
+    }
+
+
     @Transactional
-    public boolean update (CrewMember member) {
+    public boolean update(CrewMember member) {
         CrewMember old = crewRepository.findOne(member.getId());
         if (old == null)
             return false;
@@ -84,11 +84,10 @@ public class CrewService {
     }
 
     @Transactional
-    public boolean delete (CrewMember member) {
-        CrewMember old = crewRepository.findOne(member.getId());
-        if (old == null)
+    public boolean delete(Integer id) {
+        if (crewRepository.getOne(id) == null)
             return false;
-        crewRepository.delete(old.getId());
+        crewRepository.delete(id);
         return true;
     }
 

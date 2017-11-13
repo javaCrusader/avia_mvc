@@ -1,5 +1,7 @@
 package model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,24 +16,35 @@ public class CrewMemberVacation {
     private Integer id;
 
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat (pattern="yyyy-MM-dd")
     @Column (nullable = false)
     private Date start;
 
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat (pattern="yyyy-MM-dd")
     @Column (nullable = false)
     private Date end;
 
     @OneToOne(mappedBy = "vacation")
     private CrewMember member;
 
+
     @Transient
-    private SimpleDateFormat dateFmt;
+    private static SimpleDateFormat dateFmt;
     {
-        dateFmt = new SimpleDateFormat("dd/M/yyyy");
+        dateFmt = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     public CrewMemberVacation() {
 
+    }
+
+    public static SimpleDateFormat getDateFmt() {
+        return dateFmt;
+    }
+
+    public static void setDateFmt(SimpleDateFormat dateFmt) {
+        CrewMemberVacation.dateFmt = dateFmt;
     }
 
     public CrewMemberVacation(Date start, Date end) {
@@ -40,8 +53,8 @@ public class CrewMemberVacation {
     }
 
     public CrewMemberVacation(String start, String end) throws ParseException {
-        setStart(start);
-        setEnd(end);
+        setStringStart(start);
+        setStringEnd(end);
     }
 
     public CrewMember getMember() {
@@ -68,7 +81,7 @@ public class CrewMemberVacation {
         this.start = start;
     }
 
-    public void setStart(String start) throws ParseException {
+    public void setStringStart(String start) throws ParseException {
         this.start = dateFmt.parse(start);
     }
 
@@ -80,9 +93,8 @@ public class CrewMemberVacation {
         this.end = end;
     }
 
-    public void setEnd(String end) throws ParseException {
+    public void setStringEnd(String end) throws ParseException {
         this.end = dateFmt.parse(end);
     }
-
 
 }

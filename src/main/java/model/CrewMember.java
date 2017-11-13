@@ -21,7 +21,6 @@ public class CrewMember {
     @JoinColumn (name = "function_id", nullable = false)
     private CompanyRole function;
 
-
     private int salaryInHour;
 
 
@@ -34,13 +33,21 @@ public class CrewMember {
         this.vacation = vacation;
     }
 
+    public int getSalaryInHour() {
+        return salaryInHour;
+    }
+
+    public void setSalaryInHour(int salaryInHour) {
+        this.salaryInHour = salaryInHour;
+    }
 
     public CompanyRole getFunction() {
         return function;
     }
 
-    public void setFunction(CompanyRole function) {
+    public CrewMember setFunction(CompanyRole function) {
         this.function = function;
+        return this;
     }
 
     public CrewMemberVacation getVacation() {

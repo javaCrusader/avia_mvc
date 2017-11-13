@@ -4,6 +4,8 @@ import model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import repository.RoleRepository;
 
+import java.util.List;
+
 public class RoleService {
 
     @Autowired
@@ -19,6 +21,10 @@ public class RoleService {
 
     public Role get(Integer id) {
         return roleRepository.findOne(id);
+    }
+
+    public List<Role> getAll() {
+        return roleRepository.findAllByOrderByIdAsc();
     }
 
     public boolean update(Role role) {

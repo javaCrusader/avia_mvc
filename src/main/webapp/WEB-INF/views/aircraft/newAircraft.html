@@ -8,10 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>Profile</title>
+    <title>Simbirsoft Aircraft</title>
     <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
           th:href="@{/resources/css/bootstrap.min.css}"/>
-    <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}"/>
+    <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/core.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 </head>
 <body>
@@ -21,11 +22,12 @@
         <h2 th:text="'Aircraft'"></h2>
     </div>
     <form th:action="@{/newAircraft}" method="post" th:object="${aircraft}">
-
+        <input type="hidden" name="cmd" th:value="${cmd}"/>
+        <input type="hidden" th:field="*{id}"/>
         <div class="form-group row">
             <label class="col-sm-2 col-form-label col-form-label-lg">Aircraft name</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control form-control-lg" th:field="*{name}" />
+                <input type="text" class="form-control form-control-lg" th:field="*{name}"/>
             </div>
         </div>
         <table class="table table-condensed">
@@ -35,37 +37,28 @@
                 <td>Capacity</td>
             </tr>
             </thead>
-            <!--  <tr th:each="airPlace : ${airPlaceList}" >
-                 <td th:text="${airPlace.airClass.name}"></td>
-                 <td><input type="number" min="0" class="form-control" id = "airPlace.capacity"
-                            name="airPlace.capacity" th:value="${airPlace.capacity}"/> </td>
-             </tr>-->
-            <!--<div th:each="airPlace : *{airPlaceList}">
-                <div class="input-field col s4" >
-                    <td th:text="${airPlace.airClass.name}"></td>
-                    <td><input type="text" class="form-control" id = "capacity"
-                               name="capacity" th:value="${airPlace.capacity}"/> </td>
-                               <input data-th-name="*{airPlaceList[__${status.index}__].capacity}" th:field="${airPlace.capacity}"/>
+            <tr th:each="airPlace,stat : *{placeInfoList}">
+                <!-- собираем обьект, ставим ссылки в обе стороны для самолета и его мест,
+                если это новый обьект, то запрошенные поля будут пустыми и все равно произойдет инсерт -->
+                <input type="hidden" th:field="*{placeInfoList[__${stat.index}__].airClass.name}"/>
+                <input type="hidden" th:field="*{placeInfoList[__${stat.index}__].airClass.id}"/>
+                <div th:if="${cmd} == 'edit'">
+                    <input type="hidden" th:field="*{placeInfoList[__${stat.index}__].id}"/>
+                    <input type="hidden" th:field="*{placeInfoList[__${stat.index}__].aircraft.id}"/>
                 </div>
-            </div> -->
+                <td th:text="*{placeInfoList[__${stat.index}__].airClass.name}"></td>
+                <td><input type="number" min="0" th:field="*{placeInfoList[__${stat.index}__].capacity}"/></td>
+            </tr>
+        </table>
 
-             <tr th:each="airPlace,stat : *{placeInfoList}">
-                 <input type="hidden" th:field="*{placeInfoList[__${stat.index}__].airClass.name}"/>
-                 <input type="hidden" th:field="*{placeInfoList[__${stat.index}__].airClass.id}"/>
-                 <input type="hidden" th:field="*{placeInfoList[__${stat.index}__].aircraft}"/>
-                 <td th:text="*{placeInfoList[__${stat.index}__].airClass.name}"></td>
-                 <td><input type="number" min="0" th:field="*{placeInfoList[__${stat.index}__].capacity}"/></td>
-             </tr>
-    </table>
-
-    <div class="form-group">
-        <div class="col-sm-13">
-            <button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
-            <button type="submit" class="btn btn-primary" name="submit" value="cancel">Cancel</button>
+        <div class="form-group">
+            <div class="col-sm-13">
+                <button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
+                <button type="submit" class="btn btn-primary" name="submit" value="cancel">Cancel</button>
+            </div>
         </div>
-    </div>
 
-</form>
+    </form>
 </div>
 <div class="text-center" th:insert="~{fragments/footer :: footer}">&copy; 2017 Simbirsoft</div>
 </body>

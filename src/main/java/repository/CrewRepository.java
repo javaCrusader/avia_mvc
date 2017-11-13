@@ -8,4 +8,6 @@ import java.util.List;
 public interface CrewRepository extends JpaRepository<CrewMember, Integer> {
 
     List<CrewMember> findByName(String name);
+
+    List<CrewMember> findAllByOrderByIdAsc();
 }

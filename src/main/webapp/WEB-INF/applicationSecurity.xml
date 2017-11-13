@@ -8,11 +8,11 @@
 		http://www.springframework.org/schema/security/spring-security.xsd">
 
     <!-- enable use-expressions -->
-    <http auto-config="true" use-expressions="true">
+    <http auto-config="true" use-expressions="true" >
         <intercept-url pattern="/admin**" access="hasRole('ROLE_ADMIN')" />
-        <intercept-url pattern="/profile" access="hasRole('ROLE_USER')" />
+        <intercept-url pattern="/profile" access="hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')" />
         <intercept-url pattern="/aircrafts" access="hasRole('ROLE_ADMIN') or hasRole('ROLE_AIRCRAFTMANAGER')" />
-
+        <intercept-url pattern="/crew" access="hasRole('ROLE_ADMIN') or hasRole('ROLE_CREWMANAGER')" />
         <!-- access denied page -->
         <access-denied-handler error-page="/403" />
         <form-login
@@ -20,7 +20,7 @@
                 default-target-url="/main"
                 authentication-failure-url="/login?error"
                 username-parameter="username"
-                password-parameter="password" />
+                password-parameter="password"/>
         <logout logout-success-url="/main" delete-cookies="JSESSIONID"/>
         <!-- enable csrf protection -->
         <csrf/>
@@ -28,6 +28,7 @@
                 token-validity-seconds="1209600"
                 remember-me-parameter="remember-me"
                 data-source-ref="dataSource"/>
+
     </http>
 
     <!-- Persistent Remember Me Service -->

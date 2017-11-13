@@ -9,4 +9,6 @@ import java.util.List;
 public interface CompanyRoleRepository extends JpaRepository<CompanyRole,Integer> {
 
     List<CompanyRole> findByName(String name);
+
+    List<CompanyRole> findAllByOrderByIdAsc();
 }

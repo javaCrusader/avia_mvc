@@ -47,8 +47,9 @@ public class AircraftPlaceInfo {
         return aircraft;
     }
 
-    public void setAircraft(Aircraft aircraft) {
+    public AircraftPlaceInfo setAircraft(Aircraft aircraft) {
         this.aircraft=aircraft;
+        return this;
     }
 
     /**
@@ -59,15 +60,17 @@ public class AircraftPlaceInfo {
         return airClass;
     }
 
-    public void setAirClass(AircraftClassData airClass) {
+    public AircraftPlaceInfo setAirClass(AircraftClassData airClass) {
         this.airClass = airClass;
+        return this;
     }
 
     public int getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(int capacity) {
+    public AircraftPlaceInfo setCapacity(int capacity) {
         this.capacity = capacity;
+        return this;
     }
 }

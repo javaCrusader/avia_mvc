@@ -17,6 +17,10 @@
     <div class="text-center">
         <h2 th:text="'Aircraft list'"></h2>
     </div>
+    <div class="text-left">
+        <span th:utext="${message}"></span>
+    </div>
+
 
     <table class="table table-condensed">
     <thead>
@@ -26,12 +30,23 @@
     </tr>
     </thead>
     <tr th:each="aircraft : ${aircraftList}">
-        <td><a href="#" th:text="${aircraft.id}">1</a></td>
+        <td>
+            <form th:action="@{/newAircraft}" method="get">
+                <input type="hidden" name="idAircraft" th:value="${aircraft.id}"/>
+                <input type="hidden" name="cmd" value="edit"/>
+                <button type="submit" class="btn btn-info" th:text="${aircraft.id}"> </button>
+            </form></td>
         <td th:text="${aircraft.name}">Title ...</td>
+        <td>
+            <form th:action="@{/aircrafts}" method="post">
+                <input type="hidden" name="idAircraft" th:value="${aircraft.id}"/>
+                <button type="submit" class="btn btn-info">del</button>
+            </form></td>
     </tr>
 </table>
     <form th:action="@{/newAircraft}">
         <button class="btn btn-lg btn-primary" type="Submit" th:text="Create"></button>
+        <input type="hidden" name="cmd" value="create"/>
     </form>
 </div>
 <div class="text-center" th:insert="~{fragments/footer :: footer}">&copy; 2017 Simbirsoft</div>
