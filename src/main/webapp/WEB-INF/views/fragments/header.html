@@ -27,6 +27,11 @@
                     <form id="formCrew" th:action="@{/crew}" method="get">
                     </form>
                 </li>
+                <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'') or hasRole(''ROLE_FLIGHTMANAGER'')')}">
+                    <a href="/flights" th:href="@{#}" onclick="$('#formFlights').submit();">Flights</a>
+                    <form id="formFlights" th:action="@{/flights}" method="get">
+                    </form>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li th:if="${#authorization.expression('!isAuthenticated()')}">

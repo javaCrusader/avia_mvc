@@ -13,6 +13,7 @@ import repository.CrewRepository;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,7 +29,8 @@ public class CrewService {
     Logger logger = LoggerFactory.getLogger(CrewService.class);
 
     public boolean insert(CrewMember member) {
-        return crewRepository.save(member.setFunction(companyRoleRepository.getOne(member.getFunction().getId()))) != null;
+        //return crewRepository.save(member.setFunction(companyRoleRepository.getOne(member.getFunction().getId()))) != null;
+        return crewRepository.save(member) != null; //В ОБщем виде - обьект подготовить ранее.
     }
 
     public boolean constructInsert(String name, String start, String end, String companyRole) {
@@ -61,6 +63,15 @@ public class CrewService {
 
     public List<CrewMember> getAll() {
         return crewRepository.findAllByOrderByIdAsc();
+    }
+
+    public List<CrewMember> getAllFree() {
+        return crewRepository.findAllByOrderByIdAsc().stream().filter(member -> member.getFlight() == null).collect(Collectors.toList());
+    }
+
+    public List<CrewMember> getAllFreeByFunction(String functionName) {
+        return crewRepository.findAllByOrderByIdAsc().stream().filter(member -> member.getFlight() == null && member.getFunction().getName().equals(functionName))
+                .collect(Collectors.toList());
     }
 
     public List<CompanyRole> getAllCompanyRoles() {

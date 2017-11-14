@@ -44,7 +44,7 @@ public class UserController {
 
     @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
     public String login() {
-        return "login";
+        return "user/login";
     }
 
 
@@ -84,7 +84,7 @@ public class UserController {
     public String registration(Model model) {
         logger.info("DO_GET TRY TO REGISTER");
         model.addAttribute("user", new User());
-        return "registration";
+        return "user/registration";
     }
 
     @RequestMapping(value = {"/userdata"}, method = RequestMethod.GET)
@@ -94,7 +94,7 @@ public class UserController {
             logger.info(authentication.getName());
             model.addAttribute("user", userService.getByName(authentication.getName()));
         }
-        return "userdata";
+        return "user/userdata";
     }
 
     @RequestMapping(value = {"/userdata"}, method = RequestMethod.POST)

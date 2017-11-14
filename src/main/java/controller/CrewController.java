@@ -53,20 +53,19 @@ public class CrewController {
                                    @RequestParam(value = "idCrewMember", required = false) Integer idCrewMember) {
         logger.info("newCrewmember GET");
         logger.info("newCrewmember GET id member" + idCrewMember);
+        CrewMember member = null;
         if (cmd.equals("create")) {
-            CrewMember member = new CrewMember();
+            member = new CrewMember();
             member.setFunction(new CompanyRole());
             member.setVacation(new CrewMemberVacation());
-            model.addAttribute("member", member);
             model.addAttribute("cmd", "create");
         }
         if (cmd.equals("edit")) {
-            CrewMember member = crewService.get(idCrewMember);
-            model.addAttribute("member", member);
+            member = crewService.get(idCrewMember);
             model.addAttribute("cmd", "edit");
         }
-        List<CompanyRole> companyRoleList = crewService.getAllCompanyRoles();
-        model.addAttribute("companyRoleList", companyRoleList);
+        model.addAttribute("member", member);
+        model.addAttribute("companyRoleList", crewService.getAllCompanyRoles());
         return "crew/newCrewMember";
     }
 
@@ -75,6 +74,12 @@ public class CrewController {
                                 @RequestParam(value = "submit", required = true) String submit,
                                 BindingResult bindingResult, Model model) {
 
+
+        //member.getFunction().addCrewMember(member);
+        if (submit.equals("cancel"))
+            return "redirect:/crew";
+        if (cmd.equals("create"))
+            member.setFunction(crewService.getCompanyRole(member.getFunction().getId()));
         if (crewService.insert(member))
             resultMessage = cmd.equals("create") ? "create member ok" : "update member ok";
         else

@@ -60,6 +60,10 @@ public class AircraftService {
         return aircraftRepository.findAll();
     }
 
+    public List<Aircraft> getAllFree() {
+        return aircraftRepository.findAll().stream().filter(aircraft -> aircraft.getFlight() == null).collect(Collectors.toList());
+    }
+
     public List<AircraftClassData> getAllClasses() {
         return aircraftClassRepository.findAllByOrderByIdAsc();
     }

@@ -25,7 +25,7 @@ public class CrewMemberVacation {
     @Column (nullable = false)
     private Date end;
 
-    @OneToOne(mappedBy = "vacation")
+    @OneToOne(cascade = CascadeType.ALL,mappedBy = "vacation")
     private CrewMember member;
 
 

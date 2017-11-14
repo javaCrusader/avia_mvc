@@ -13,7 +13,7 @@ public class CompanyRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "function")
+    @OneToMany(cascade = CascadeType.ALL ,mappedBy = "function")
     private Set<CrewMember> crewMemberSet;
 
     @Column(unique = true, nullable = false)

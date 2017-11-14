@@ -78,6 +78,10 @@
         <appender-ref ref="FILE-AUDIT2" />
     </logger>
 
+    <logger name="controller.FlightController" level="debug" additivity="false">
+        <appender-ref ref="FILE-AUDIT2" />
+    </logger>
+
     <root level="error">
         <appender-ref ref="STDOUT" />
     </root>

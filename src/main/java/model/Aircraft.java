@@ -17,6 +17,9 @@ public class Aircraft {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "aircraft")
     private List<AircraftPlaceInfo> placeInfoList;
 
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "aircraft")
+    private Flight flight;
+
     public Aircraft() {
     }
 
@@ -25,6 +28,14 @@ public class Aircraft {
         this.name = name;
     }
 
+
+    public Flight getFlight() {
+        return flight;
+    }
+
+    public void setFlight(Flight flight) {
+        this.flight = flight;
+    }
 
     /**
      * каждому самолету соответствуют все его места в различных классах.

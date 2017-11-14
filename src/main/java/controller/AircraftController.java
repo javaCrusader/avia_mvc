@@ -56,8 +56,9 @@ public class AircraftController {
     public String retrieveAircraft(Model model, @RequestParam(value = "cmd", required = true) String cmd,
                                    @RequestParam(value = "idAircraft", required = false) Integer idAircraft) {
         logger.info("newAircraft GET");
+        Aircraft aircraft = null;
         if (cmd.equals("create")) {
-            Aircraft aircraft = new Aircraft();
+            aircraft = new Aircraft();
             List<AircraftClassData> classDataList = aircraftService.getAllClasses();
             List<AircraftPlaceInfo> airPlaceList = new ArrayList<>();
             AircraftPlaceInfo airPlace;
@@ -68,15 +69,13 @@ public class AircraftController {
 
             }
             aircraft.setPlaceInfoList(airPlaceList);
-            model.addAttribute("aircraft", aircraft);
             model.addAttribute("cmd", "create");
         }
         if (cmd.equals("edit")) {
-            Aircraft aircraft = aircraftService.get(idAircraft);
-            model.addAttribute("aircraft", aircraft);
+            aircraft = aircraftService.get(idAircraft);
             model.addAttribute("cmd", "edit");
-            logger.info("add attribute for edit " + aircraft.getId());
         }
+        model.addAttribute("aircraft", aircraft);
 
         return "aircraft/newAircraft";
     }

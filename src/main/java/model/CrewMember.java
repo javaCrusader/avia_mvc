@@ -13,13 +13,19 @@ public class CrewMember {
     @Column(nullable = false)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    /*поле необходимо писать в БД с каждым новым членом команды */
+    @OneToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "vacation_id", nullable = false)
     private CrewMemberVacation vacation;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    /*это напротив не надо никогда писать */
+    @ManyToOne
     @JoinColumn (name = "function_id", nullable = false)
     private CompanyRole function;
+
+    @ManyToOne (cascade=CascadeType.ALL)
+   // @JoinColumn (name = "flight_id", nullable = true)
+    private Flight flight;
 
     private int salaryInHour;
 
@@ -31,6 +37,14 @@ public class CrewMember {
         this.name = name;
         this.function = function;
         this.vacation = vacation;
+    }
+
+    public Flight getFlight() {
+        return flight;
+    }
+
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     public int getSalaryInHour() {

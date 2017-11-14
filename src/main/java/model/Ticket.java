@@ -18,6 +18,8 @@ public class Ticket {
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
+
+
     public Ticket() {
     }
 

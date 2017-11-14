@@ -17,7 +17,7 @@ public class Issue {
     @Temporal(TemporalType.DATE)
     private Date created;
 
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
