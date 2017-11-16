@@ -1,7 +1,6 @@
 package model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +12,7 @@ public class CompanyRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(cascade = CascadeType.ALL ,mappedBy = "function")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "function")
     private Set<CrewMember> crewMemberSet;
 
     @Column(unique = true, nullable = false)

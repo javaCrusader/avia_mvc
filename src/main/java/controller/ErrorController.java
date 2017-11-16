@@ -3,11 +3,9 @@ package controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -16,9 +14,11 @@ import java.io.IOException;
 public class ErrorController {
 
     private static Logger logger = LoggerFactory.getLogger(ErrorController.class);
+
     {
         logger.info("ERROR CONTROLLER HERE");
     }
+
     @ExceptionHandler(Exception.class)
     public String exception(Exception throwable, Model model) {
         logger.error("Exception during execution of SpringSecurity application", throwable);
@@ -26,9 +26,10 @@ public class ErrorController {
         model.addAttribute("errorMessage", errorMessage);
         return "error";
     }
-    @ExceptionHandler (IOException.class)
-    public String handleException(HttpServletRequest request, Exception ex){
-        logger.info("exception:: URL="+request.getRequestURL());
+
+    @ExceptionHandler(IOException.class)
+    public String handleException(HttpServletRequest request, Exception ex) {
+        logger.info("exception:: URL=" + request.getRequestURL());
         return "error";
     }
 

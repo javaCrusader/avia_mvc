@@ -35,14 +35,19 @@
             <td>Date end</td>
         </tr>
         </thead>
-        <tr th:each="flight : ${flightList}">
+        <tr th:if="not ${flight.done}" th:each="flight : ${flightList}">
             <td th:text="${flight.id}">1</td>
             <td><a href="#" th:text="${flight.name}">Title ...</a></td>
             <td th:text="${flight.startCity.name}"></td>
             <td th:text="${flight.endCity.name}"></td>
             <td th:text="${#dates.format(flight.start, 'dd-MM-yyyy HH:mm')}">1</td>
             <td th:text="${#dates.format(flight.end, 'dd-MM-yyyy HH:mm')}">1</td>
-            <!-- <td th:text="${flight.text}">Text ...</td> -->
+            <td>
+                <form th:action="@{/newTicket}" method="get">
+                    <input type="hidden" name="idFlight" th:value="${flight.id}"/>
+                    <button type="submit" class="btn btn-info">buy</button>
+                </form>
+            </td>
         </tr>
     </table>
     <div th:insert="~{fragments/footer :: footer}">&copy; 2017 Simbirsoft</div>

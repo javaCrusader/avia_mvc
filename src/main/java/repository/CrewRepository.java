@@ -10,4 +10,8 @@ public interface CrewRepository extends JpaRepository<CrewMember, Integer> {
     List<CrewMember> findByName(String name);
 
     List<CrewMember> findAllByOrderByIdAsc();
+
+    List<CrewMember> findAllByFunctionNameEqualsAndFlightNull(String function);
+
+    List<CrewMember> findAllByFlightIdEqualsOrderByFunctionId(Integer flightId);
 }

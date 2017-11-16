@@ -8,14 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import service.AircraftService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +53,6 @@ public class AircraftController {
     @RequestMapping(value = "/newAircraft", method = RequestMethod.GET)
     public String retrieveAircraft(Model model, @RequestParam(value = "cmd", required = true) String cmd,
                                    @RequestParam(value = "idAircraft", required = false) Integer idAircraft) {
-        logger.info("newAircraft GET");
         Aircraft aircraft = null;
         if (cmd.equals("create")) {
             aircraft = new Aircraft();
@@ -82,12 +79,7 @@ public class AircraftController {
 
 
     @RequestMapping(value = "/newAircraft", method = RequestMethod.POST)
-    public String commitChanges(@ModelAttribute Aircraft aircraft, @RequestParam(value = "cmd", required = true) String cmd,
-                                @RequestParam(value = "submit", required = true) String submit,
-                                BindingResult bindingResult, Model model) {
-        logger.info("in post /newAircraft " + cmd);
-        if (submit.equals("cancel"))
-            return "redirect:/aircrafts";
+    public String commitChanges(@ModelAttribute Aircraft aircraft, @RequestParam(value = "cmd", required = true) String cmd) {
         if (cmd.equals("create")) {
             for (AircraftPlaceInfo info : aircraft.getPlaceInfoList())
                 info.setAircraft(aircraft);

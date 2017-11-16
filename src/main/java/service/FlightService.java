@@ -1,12 +1,16 @@
 package service;
 
 import model.City;
+import model.Country;
 import model.Flight;
+import model.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import repository.CityRepository;
+import repository.CountryRepository;
 import repository.FlightRepository;
+import repository.TicketRepository;
 
 import java.util.List;
 
@@ -19,10 +23,25 @@ public class FlightService {
     @Autowired
     CityRepository cityRepository;
 
+    @Autowired
+    CountryRepository countryRepository;
+
+    @Autowired
+    TicketRepository ticketRepository;
+
 
     public boolean insert(Flight flight) {
-       return flightRepository.save(flight) != null;
+        return flightRepository.save(flight) != null;
     }
+
+    public boolean insertTicket (Ticket ticket) {
+        return ticketRepository.save(ticket) !=null;
+    }
+
+    public void deleteTicket (Integer idTicket) {
+        ticketRepository.delete(idTicket);
+    }
+
 
     public boolean update(Flight flight) {
         Flight old = flightRepository.findOne(flight.getId());
@@ -47,6 +66,14 @@ public class FlightService {
 
     public List<City> getAllCities() {
         return cityRepository.findAllByOrderByNameAsc();
+    }
+
+    public List<Country> getAllCountries() {
+        return countryRepository.findAllByOrderByNameAsc();
+    }
+
+    public List<City> getCitiesByCountry(String country) {
+        return cityRepository.findAllByCountryNameEquals(country);
     }
 
     public Flight get(Integer id) {

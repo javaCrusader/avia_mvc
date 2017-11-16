@@ -50,7 +50,6 @@ public class Aircraft {
         return this;
     }
 
-
     public Integer getId() {
         return id;
     }

@@ -6,6 +6,7 @@ import org.springframework.format.annotation.NumberFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +35,10 @@ public class User {
 
     private String address;
 
+    private int balance;
+
+    private long passport;
+
     @Email(message = "*Please provide a valid Email")
     @NotEmpty(message = "*Please provide an email")
     private String email;
@@ -57,6 +62,22 @@ public class User {
         this.name = username;
         this.password = password;
         this.roleList = roles;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public long getPassport() {
+        return passport;
+    }
+
+    public void setPassport(long passport) {
+        this.passport = passport;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 
     public String getFirstName() {
@@ -115,7 +136,6 @@ public class User {
         this.issueList = issueList;
     }
 
-
     public Integer getId() {
         return id;
     }
@@ -151,5 +171,14 @@ public class User {
     public void setRoleList(Set<Role> roles) {
         this.roleList = roles;
     }
+
+    public User addTicket(Ticket ticket) {
+        if (ticketsList == null) {
+            ticketsList = new ArrayList<>();
+        }
+        ticketsList.add(ticket.setUser(this));
+        return this;
+    }
+
 
 }

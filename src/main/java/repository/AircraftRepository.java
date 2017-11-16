@@ -1,7 +1,6 @@
 package repository;
 
 import model.Aircraft;
-import model.AircraftClassData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

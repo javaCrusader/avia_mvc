@@ -10,6 +10,7 @@ import repository.TicketRepository;
 import repository.UserRepository;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 @Service
@@ -49,6 +50,10 @@ public class UserService {
         return userRepository.save(user) != null;
     }
 
+    public boolean saveCompleteObject(User user) {
+        return userRepository.save(user) != null;
+    }
+
     public boolean update(User user) {
         User old = userRepository.findByName(user.getName());
         if (old == null)
@@ -61,16 +66,10 @@ public class UserService {
         return userRepository.save(old) != null;
     }
 
-
     public User getByName(String name) {
         return userRepository.findByName(name);
     }
 
-    public boolean addTicket(Flight flight, User user) {
-        Ticket ticket = new Ticket(flight, user);
-        user.getTicketsList().add(ticket);
-        return ticketRepository.save(ticket) != null;
-    }
 
     public boolean addIssue(User user, Issue issue) {
         user.getIssueList().add(issue);

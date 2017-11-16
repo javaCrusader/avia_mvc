@@ -1,6 +1,7 @@
 package model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "place_data")
@@ -18,9 +19,14 @@ public class AircraftPlaceInfo {
     @JoinColumn(name = "airclass_id", nullable = false)
     private AircraftClassData airClass;
 
-
-    @Column (nullable = false)
+    @Column(nullable = false)
     private int capacity;
+
+    @Column(name = "price")
+    private int price;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "airPlace")
+    private List<Ticket> ticketList;
 
     public AircraftPlaceInfo() {
 
@@ -30,6 +36,22 @@ public class AircraftPlaceInfo {
         this.capacity = capacity;
         this.airClass = airClass;
         this.aircraft = aircraft;
+    }
+
+    public List<Ticket> getTicketList() {
+        return ticketList;
+    }
+
+    public void setTicketList(List<Ticket> ticketList) {
+        this.ticketList = ticketList;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public Integer getId() {
@@ -48,7 +70,7 @@ public class AircraftPlaceInfo {
     }
 
     public AircraftPlaceInfo setAircraft(Aircraft aircraft) {
-        this.aircraft=aircraft;
+        this.aircraft = aircraft;
         return this;
     }
 

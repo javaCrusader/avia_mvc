@@ -13,7 +13,6 @@ import repository.CrewRepository;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -65,13 +64,15 @@ public class CrewService {
         return crewRepository.findAllByOrderByIdAsc();
     }
 
-    public List<CrewMember> getAllFree() {
-        return crewRepository.findAllByOrderByIdAsc().stream().filter(member -> member.getFlight() == null).collect(Collectors.toList());
-    }
 
     public List<CrewMember> getAllFreeByFunction(String functionName) {
-        return crewRepository.findAllByOrderByIdAsc().stream().filter(member -> member.getFlight() == null && member.getFunction().getName().equals(functionName))
-                .collect(Collectors.toList());
+        /*return crewRepository.findAllByOrderByIdAsc().stream().filter(member -> member.getFlight() == null && member.getFunction().getName().equals(functionName))
+                .collect(Collectors.toList());*/
+        return crewRepository.findAllByFunctionNameEqualsAndFlightNull(functionName);
+    }
+
+    public List<CrewMember> getAllByFlight(Integer id) {
+        return crewRepository.findAllByFlightIdEqualsOrderByFunctionId(id);
     }
 
     public List<CompanyRole> getAllCompanyRoles() {
@@ -84,7 +85,8 @@ public class CrewService {
 
     @Transactional
     public boolean delete(Integer id) {
-        if (crewRepository.getOne(id) == null)
+        CrewMember member = crewRepository.getOne(id);
+        if (member == null || (member.getFlight() != null && !member.getFlight().isDone()))
             return false;
         crewRepository.delete(id);
         return true;

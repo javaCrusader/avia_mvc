@@ -5,9 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,19 +52,26 @@ public class FlightController {
 
     @RequestMapping(value = "/newFlight", method = RequestMethod.GET)
     public String retrieveFlight(Model model, @RequestParam(value = "cmd", required = true) String cmd,
-                               @RequestParam(value = "idFlight", required = false) Integer idFlight) {
+                                 @RequestParam(value = "idFlight", required = false) Integer idFlight) {
         logger.info("newFlight GET");
         logger.info("newFlight GET id newFlight" + idFlight);
         Flight flight = null;
 
-        //закидываем все роли команды в view.
-        List<CompanyRole> functionList = crewService.getAllCompanyRoles();
-        Map<String, List<CrewMember>> peopleMap = new HashMap<>();
+        //закидываем все роли команды в view. ORDER by ID
+        List<CompanyRole> functionList = crewService.getAllCompanyRoles(); //sorted by company role id
+        LinkedHashMap<String, List<CrewMember>> peopleMap = new LinkedHashMap<>(); //it must be sorted too for editing
         for (CompanyRole function : functionList) {
-            peopleMap.put(function.getName(),crewService.getAllFreeByFunction(function.getName()));
+            peopleMap.put(function.getName(), crewService.getAllFreeByFunction(function.getName()));
         }
-        model.addAttribute("peopleMap",peopleMap);
-        model.addAttribute("cityList", flightService.getAllCities());
+        model.addAttribute("peopleMap", peopleMap);
+
+        //почти такой же фокус с городами
+        List<Country> countryList = flightService.getAllCountries();
+        Map<String, List<City>> countryMap = new HashMap<>();
+        for (Country country : countryList) {
+            countryMap.put(country.getName(), flightService.getCitiesByCountry(country.getName()));
+        }
+        model.addAttribute("countryMap", countryMap);
         model.addAttribute("aircraftList", aircraftService.getAllFree());
 
         if (cmd.equals("create")) {
@@ -74,27 +79,27 @@ public class FlightController {
             flight.setAircraft(new Aircraft());
             flight.setStartCity(new City());
             flight.setEndCity(new City());
-            flight.setCrewMemberList(new ArrayList<CrewMember>(functionList.size()));
+            flight.setCrewMemberList(new ArrayList<>(functionList.size()));
             model.addAttribute("cmd", "create");
         }
         if (cmd.equals("edit")) {
             flight = flightService.get(idFlight);
+            List<CrewMember> currentCrew = crewService.getAllByFlight(idFlight); //sorted by company role id
+            model.addAttribute("currentCrew", currentCrew);
             model.addAttribute("cmd", "edit");
         }
         model.addAttribute("flight", flight);
-        /*model.addAttribute("crewPilotList", crewService.getAllFreeByFunction("FUNC_PILOT"));
-        model.addAttribute("crewSecondPilotList", crewService.getAllFreeByFunction("FUNC_SECOND_PILOT"));
-        model.addAttribute("crewStewardList", crewService.getAllFreeByFunction("FUNC_STEWARD"));
-        model.addAttribute("crewEngineerList", crewService.getAllFreeByFunction("FUNC_ENGINEER"));*/
         return "flight/newFlight";
     }
 
+    /**
+     * все отсортировано, что бы можно было работать по индексам.
+     *
+     * @return
+     */
     @RequestMapping(value = "/newFlight", method = RequestMethod.POST)
-    public String commitChanges(@ModelAttribute Flight flight, @RequestParam(value = "cmd", required = true) String cmd,
-                                @RequestParam(value = "submit", required = true) String submit) {
+    public String commitChanges(@ModelAttribute Flight flight, @RequestParam(value = "cmd", required = true) String cmd) {
 
-        if (submit.equals("cancel"))
-            return "redirect:/flights";
         /*по самолету приходит только ид, нужно связать с настоящим обьектом*/
         if (cmd.equals("create")) {
             Aircraft aircraft = aircraftService.get(flight.getAircraft().getId());
@@ -102,10 +107,21 @@ public class FlightController {
             aircraft.setFlight(flight);
             //для записи в БД заполняем полностью обьект
             flight.getCrewMemberList().stream().forEach(crewMember -> {
-                //CrewMember dbMember = crewService.get(crewMember.getId());
                 crewMember.setFlight(flight);
-                //crewMember.setName(dbMember.getName());
             });
+        }
+        if (cmd.equals("edit")) {
+            List<CrewMember> currentCrew = crewService.getAllByFlight(flight.getId());
+            Aircraft aircraft = aircraftService.get(flight.getAircraft().getId());
+            flight.setAircraft(aircraft);
+            aircraft.setFlight(flight);
+            int i = 0;
+            for (CrewMember member : flight.getCrewMemberList()) {
+                if (member.getId() != null)
+                    currentCrew.set(i, member);
+                i++;
+            }
+            flight.setCrewMemberList(currentCrew);
         }
         if (flightService.insert(flight))
             resultMessage = cmd.equals("create") ? "create flight ok" : "update flight ok";

@@ -17,7 +17,7 @@ public class Issue {
     @Temporal(TemporalType.DATE)
     private Date created;
 
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -35,6 +35,22 @@ public class Issue {
 
     {
         dateFmt = new SimpleDateFormat("dd/M/yyyy H:mm");
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 

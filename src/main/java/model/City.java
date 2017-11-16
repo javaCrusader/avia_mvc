@@ -17,8 +17,16 @@ public class City {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column (nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String name;
+
+    private double latitude;
+
+    private double longitude;
+
+    @ManyToOne
+    @JoinColumn(name = "country_id", nullable = false)
+    private Country country;
 
     public Integer getId() {
         return id;
@@ -36,6 +44,29 @@ public class City {
         this.name = name;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
 
     public List<Flight> getStartFlightList() {
         return startFlightList;

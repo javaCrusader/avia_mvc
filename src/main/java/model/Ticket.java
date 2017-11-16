@@ -18,7 +18,17 @@ public class Ticket {
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
+    @ManyToOne
+    @JoinColumn(name = "place_info_id")
+    private AircraftPlaceInfo airPlace;
 
+    private String firstName;
+
+    private String surName;
+
+    private String lastName;
+
+    private long passport;
 
     public Ticket() {
     }
@@ -26,6 +36,47 @@ public class Ticket {
     public Ticket(Flight flight, User user) {
         this.user = user;
         this.flight = flight;
+    }
+
+    public AircraftPlaceInfo getAirPlace() {
+        return airPlace;
+    }
+
+    public void setAirPlace(AircraftPlaceInfo airPlace) {
+        this.airPlace = airPlace;
+    }
+
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSurName() {
+        return surName;
+    }
+
+    public void setSurName(String surName) {
+        this.surName = surName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public long getPassport() {
+        return passport;
+    }
+
+    public void setPassport(long passport) {
+        this.passport = passport;
     }
 
     public Integer getId() {
@@ -40,8 +91,9 @@ public class Ticket {
         return user;
     }
 
-    public void setUser(User userData) {
+    public Ticket setUser(User userData) {
         this.user = userData;
+        return this;
     }
 
     public Flight getFlight() {

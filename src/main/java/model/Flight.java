@@ -1,11 +1,9 @@
 package model;
 
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +15,7 @@ public class Flight {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "flight")
@@ -86,7 +84,7 @@ public class Flight {
         return this;
     }
 
-    public Flight setStartEndCity(City startCity,City endCity) {
+    public Flight setStartEndCity(City startCity, City endCity) {
         this.startCity = startCity;
         this.endCity = endCity;
         return this;

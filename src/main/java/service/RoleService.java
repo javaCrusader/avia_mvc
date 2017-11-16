@@ -34,7 +34,6 @@ public class RoleService {
         old.setName(role.getName());
         old.setUsers(role.getUsers());
         return roleRepository.save(old) != null;
-
     }
 
 }

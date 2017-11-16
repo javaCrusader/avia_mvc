@@ -35,6 +35,7 @@
             <tr>
                 <td>Class</td>
                 <td>Capacity</td>
+                <td>Price</td>
             </tr>
             </thead>
             <tr th:each="airPlace,stat : *{placeInfoList}">
@@ -48,16 +49,16 @@
                 </div>
                 <td th:text="*{placeInfoList[__${stat.index}__].airClass.name}"></td>
                 <td><input type="number" min="0" th:field="*{placeInfoList[__${stat.index}__].capacity}"/></td>
+                <td><input type="number" min="0" th:field="*{placeInfoList[__${stat.index}__].price}"/></td>
             </tr>
         </table>
 
         <div class="form-group">
             <div class="col-sm-13">
                 <button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
-                <button type="submit" class="btn btn-primary" name="submit" value="cancel">Cancel</button>
+                <a class="btn btn-primary" href="/aircrafts">Cancel</a>
             </div>
         </div>
-
     </form>
 </div>
 <div class="text-center" th:insert="~{fragments/footer :: footer}">&copy; 2017 Simbirsoft</div>

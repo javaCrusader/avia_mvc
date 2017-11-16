@@ -14,17 +14,17 @@ public class CrewMember {
     private String name;
 
     /*поле необходимо писать в БД с каждым новым членом команды */
-    @OneToOne (cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vacation_id", nullable = false)
     private CrewMemberVacation vacation;
 
     /*это напротив не надо никогда писать */
     @ManyToOne
-    @JoinColumn (name = "function_id", nullable = false)
+    @JoinColumn(name = "function_id", nullable = false)
     private CompanyRole function;
 
-    @ManyToOne (cascade=CascadeType.ALL)
-   // @JoinColumn (name = "flight_id", nullable = true)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinTable(name = "flight_crew", joinColumns = @JoinColumn(name = "member_id"), inverseJoinColumns = @JoinColumn(name = "flight_id"))
     private Flight flight;
 
     private int salaryInHour;

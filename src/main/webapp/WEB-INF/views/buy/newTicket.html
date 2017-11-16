@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Ticket</title>
+    <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/core.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="/resources/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <div class="text-center">
+        <h2 th:text="'Ticket purchasing'"></h2>
+    </div>
+    <form th:action="@{/newTicket}" method="post" th:object="${ticket}">
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <td>Flight Name</td>
+                <td>Aircraft Name</td>
+                <td>Start city</td>
+                <td>End city</td>
+                <td>Date start</td>
+                <td>Date end</td>
+            </tr>
+            </thead>
+            <tr>
+                <input type="hidden" th:field="*{flight.id}"/>
+                <td th:text="${ticket.flight.name}"></td>
+                <td th:text="${ticket.flight.aircraft.name}"></td>
+                <td th:text="${ticket.flight.startCity.name}"></td>
+                <td th:text="${ticket.flight.endCity.name}"></td>
+                <td th:text="${#dates.format(ticket.flight.start, 'dd-MM-yyyy HH:mm')}">1</td>
+                <td th:text="${#dates.format(ticket.flight.end, 'dd-MM-yyyy HH:mm')}">1</td>
+            </tr>
+        </table>
+        <div class="text-left">
+            <h3 th:text="'Passenger data'"></h3>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">First name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" th:field="*{firstName}" required="true"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Surname</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" th:field="*{surName}" required="true"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Last name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" th:field="*{lastName}" required="true"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Passport</label>
+            <div class="col-sm-10">
+                <input type="number" min="0" class="form-control" th:field="*{passport}" required="true"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Flight class</label>
+            <div class="col-sm-10">
+                <select th:field="*{airPlace.id}" required="true">
+                    <option th:each="place : ${ticket.flight.aircraft.placeInfoList}" th:value="${place.id}"
+                            th:text="${place.airClass.name} + ' | cost: ' + ${place.price} + ' | capacity: ' + ${place.capacity} "></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-13">
+                <button type="submit" class="btn btn-primary" name="submit" value="save">Buy</button>
+                <a class="btn btn-primary" href="/main">Cancel</a>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="text-center" th:insert="~{fragments/footer :: footer}">&copy; 2017 Simbirsoft</div>
+</body>
+</html>

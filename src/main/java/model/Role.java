@@ -25,7 +25,6 @@ public class Role {
     public Role() {
     }
 
-
     public Integer getId() {
         return id;
     }

@@ -16,21 +16,22 @@ public class CrewMemberVacation {
     private Integer id;
 
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat (pattern="yyyy-MM-dd")
-    @Column (nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(nullable = false)
     private Date start;
 
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat (pattern="yyyy-MM-dd")
-    @Column (nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(nullable = false)
     private Date end;
 
-    @OneToOne(cascade = CascadeType.ALL,mappedBy = "vacation")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "vacation")
     private CrewMember member;
 
 
     @Transient
     private static SimpleDateFormat dateFmt;
+
     {
         dateFmt = new SimpleDateFormat("yyyy-MM-dd");
     }

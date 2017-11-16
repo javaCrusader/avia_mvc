@@ -1,7 +1,7 @@
 package model;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,12 +18,15 @@ public class AircraftClassData {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "airClass")
     private Set<AircraftPlaceInfo> placeDataSet; //места соответствующие этому классу.
 
+
     public AircraftClassData() {
     }
 
     public AircraftClassData(String name) {
         this.name = name;
     }
+
+
 
     public Set<AircraftPlaceInfo> getPlaceDataSet() {
         return placeDataSet;

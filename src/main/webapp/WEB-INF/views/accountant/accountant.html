@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Simbirsoft Crew</title>
+    <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/core.css}"/>
+</head>
+<body>
+<div th:replace="fragments/header :: header">Header</div>
+<div class="container">
+    <div class="text-center">
+        <h2 th:text="'Crew list'"></h2>
+    </div>
+    <div class="text-left">
+        <span th:utext="${message}"></span>
+    </div>
+
+    <form th:action="@{/accountant}" method="get" th:object="${accResult}">
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <td>Id</td>
+                <td>Name</td>
+                <td>Hour salary</td>
+                <td>Function</td>
+                <td>Period start</td>
+                <td>Period end</td>
+            </tr>
+            </thead>
+
+            <tr th:each="calc,stat : *{accountantResultList}">
+                <input type="hidden" th:field="*{accountantResultList[__${stat.index}__].id}"/>
+                <input type="hidden" th:field="*{accountantResultList[__${stat.index}__].name}"/>
+                <input type="hidden" th:field="*{accountantResultList[__${stat.index}__].salaryInHour}"/>
+                <td th:text="${calc.id}"></td>
+                <td th:text="${calc.name}"></td>
+                <td th:text="${calc.salaryInHour}"></td>
+                <td th:text="${calc.funcName}"></td>
+                <td><input type="date" th:type="date" class="form-control" th:field="*{accountantResultList[__${stat.index}__].start}" /></td>
+                <td><input type="date" th:type="date" class="form-control" th:field="*{accountantResultList[__${stat.index}__].end}" /></td>
+            </tr>
+        </table>
+        <button class="btn btn-lg btn-primary" type="Submit" name="submit" value="submit" th:text="Check"></button>
+        <input type="hidden" name="cmd" value="check"/>
+    </form>
+
+    <div th:if="${filledResult != null and filledResult.accountantResultList != null }">
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <td>Id</td>
+                <td>Name</td>
+                <td>Period salary</td>
+            </tr>
+            </thead>
+            <tr th:each="calcResult : ${filledResult.accountantResultList}">
+                <td th:text="${calcResult.id}">Title ...</td>
+                <td th:text="${calcResult.name}">Title ...</td>
+                <td th:text="${calcResult.salaryInPeriod}">Title ...</td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+<div class="text-center" th:insert="~{fragments/footer :: footer}">&copy; 2017 Simbirsoft</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+</body>
+</html>

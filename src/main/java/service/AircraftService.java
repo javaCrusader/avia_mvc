@@ -3,7 +3,6 @@ package service;
 import model.Aircraft;
 import model.AircraftClassData;
 import model.AircraftPlaceInfo;
-import model.CrewMember;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import repository.AircraftClassRepository;
 import repository.AircraftPlaceRepository;
 import repository.AircraftRepository;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,7 +26,8 @@ public class AircraftService {
     private AircraftRepository aircraftRepository;
 
     @Autowired
-    private AircraftPlaceRepository aircraftPlaceRepository;
+    AircraftPlaceRepository placeRepository;
+
 
     Logger logger = LoggerFactory.getLogger(AircraftService.class);
 
@@ -51,6 +50,9 @@ public class AircraftService {
         return aircraftRepository.save(aircraft) != null;
     }
 
+    public AircraftPlaceInfo getPlaceInfo(Integer id) {
+        return placeRepository.findOne(id);
+    }
 
     public List<Aircraft> get(String name) {
         return aircraftRepository.findByName(name);

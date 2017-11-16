@@ -32,6 +32,7 @@
             <td>End city</td>
             <td>Date start</td>
             <td>Date end</td>
+            <td>Is done</td>
         </tr>
         </thead>
         <tr th:each="flight : ${flightList}">
@@ -47,6 +48,7 @@
             <td th:text="${flight.endCity.name}"></td>
             <td th:text="${#dates.format(flight.start, 'dd-MM-yyyy HH:mm')}"></td>
             <td th:text="${#dates.format(flight.end, 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="${flight.done}"></td>
 
             <td>
                 <form th:action="@{/flights}" method="post">
