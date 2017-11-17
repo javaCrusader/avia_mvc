@@ -14,12 +14,14 @@ public class Issue {
 
     private String problem;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    private boolean closed;
 
     public Issue(User user, String problem) {
         this.user = user;
@@ -29,6 +31,13 @@ public class Issue {
     public Issue() {
     }
 
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
 
     @Transient
     private SimpleDateFormat dateFmt;

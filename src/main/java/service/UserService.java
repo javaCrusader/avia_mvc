@@ -11,6 +11,7 @@ import repository.UserRepository;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -68,6 +69,10 @@ public class UserService {
 
     public User getByName(String name) {
         return userRepository.findByName(name);
+    }
+
+    public List<Issue> getAllIssue () {
+        return issueRepository.findAll();
     }
 
 

@@ -14,6 +14,20 @@
 <body>
 <div th:replace="fragments/header :: header">Header</div>
 <div class="container">
+
+  <!--  <form action="/flights" method="post">
+        <input type="hidden" name="cmd" value="search"/>
+        <div class="form-group col-xs-5">
+            <input type="date" name="dateStart"  class="form-control" required="true" placeholder="Type start date for search"/>
+            <input type="date" name="dateEnd" class="form-control" required="true" placeholder="Type end date for search"/>
+
+        </div>
+        <button type="submit" class="btn btn-info">
+            <span class="glyphicon glyphicon-search"></span> Search
+        </button>
+
+    </form> -->
+
     <div class="text-center">
         <h2 th:text="'Flight management list'"></h2>
     </div>
@@ -54,6 +68,7 @@
                 <form th:action="@{/flights}" method="post">
                     <input type="hidden" name="idFlight" th:value="${flight.id}"/>
                     <button type="submit" class="btn btn-info">del</button>
+                    <input type="hidden" name="cmd" value="delete"/>
                 </form></td>
         </tr>
     </table>

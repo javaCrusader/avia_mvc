@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import repository.AircraftClassRepository;
 import repository.AircraftPlaceRepository;
 import repository.AircraftRepository;
+import repository.TicketRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,11 @@ public class AircraftService {
     private AircraftRepository aircraftRepository;
 
     @Autowired
-    AircraftPlaceRepository placeRepository;
+    private AircraftPlaceRepository placeRepository;
+
+    @Autowired
+    private FlightService flightService;
+
 
 
     Logger logger = LoggerFactory.getLogger(AircraftService.class);
@@ -43,6 +48,10 @@ public class AircraftService {
                                 .setAircraft(yak))
                         .collect(Collectors.toList())));
 
+    }
+
+    public boolean savePlaceInfo(AircraftPlaceInfo placeInfo) {
+        return placeRepository.save(placeInfo) != null;
     }
 
 
@@ -87,6 +96,10 @@ public class AircraftService {
     @Transactional
     public boolean delete(Integer id) {
         Aircraft old = aircraftRepository.findOne(id);
+        if (!old.getFlight().getTicketList().isEmpty()) {
+            if (!flightService.addIssueForTicket(old.getFlight().getTicketList()))
+                return false;
+        }
         if (old == null)
             return false;
         aircraftRepository.delete(old.getId());

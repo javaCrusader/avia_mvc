@@ -30,6 +30,8 @@ public class Ticket {
 
     private long passport;
 
+    private int factCost; //стоимость на момент покупки
+
     public Ticket() {
     }
 
@@ -38,12 +40,21 @@ public class Ticket {
         this.flight = flight;
     }
 
+    public int getFactCost() {
+        return factCost;
+    }
+
+    public void setFactCost(int factCost) {
+        this.factCost = factCost;
+    }
+
     public AircraftPlaceInfo getAirPlace() {
         return airPlace;
     }
 
-    public void setAirPlace(AircraftPlaceInfo airPlace) {
+    public Ticket setAirPlace(AircraftPlaceInfo airPlace) {
         this.airPlace = airPlace;
+        return this;
     }
 
 

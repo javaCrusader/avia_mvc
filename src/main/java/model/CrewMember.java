@@ -43,8 +43,9 @@ public class CrewMember {
         return flight;
     }
 
-    public void setFlight(Flight flight) {
+    public CrewMember setFlight(Flight flight) {
         this.flight = flight;
+        return this;
     }
 
     public int getSalaryInHour() {

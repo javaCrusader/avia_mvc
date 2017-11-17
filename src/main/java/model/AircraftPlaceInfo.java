@@ -1,6 +1,8 @@
 package model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Entity
@@ -93,6 +95,26 @@ public class AircraftPlaceInfo {
 
     public AircraftPlaceInfo setCapacity(int capacity) {
         this.capacity = capacity;
+        return this;
+    }
+
+    public AircraftPlaceInfo addTicket(Ticket ticket) {
+        if (ticketList == null) {
+            ticketList = new ArrayList<>();
+        }
+        ticketList.add(ticket.setAirPlace(this));
+        ticket.setFactCost(this.price); // стоимость на момент покупки для возврата
+        return this;
+    }
+
+    public AircraftPlaceInfo removeTicket(Integer idTicket) {
+        Iterator<Ticket> itPlaceTicketList = ticketList.iterator();
+        while (itPlaceTicketList.hasNext()) { //лямбы не работают с сущностями еклипслинка
+            Ticket iter = itPlaceTicketList.next();
+            if (iter.getId() == idTicket) {
+                itPlaceTicketList.remove();
+            }
+        }
         return this;
     }
 }

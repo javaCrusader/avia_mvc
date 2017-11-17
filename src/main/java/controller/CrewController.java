@@ -26,7 +26,7 @@ public class CrewController {
 
     @RequestMapping(value = "/crew", method = RequestMethod.GET)
     public String home(Model model) {
-        model.addAttribute("crewList", crewService.getAll());
+        model.addAttribute("crewList", crewService.getAll()); //crew member function name exception
         model.addAttribute("message", resultMessage);
         resultMessage = null;
         return "crew/crew";

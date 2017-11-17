@@ -42,6 +42,11 @@
                     <form id="formTickets" th:action="@{/tickets}" method="get">
                     </form>
                 </li>
+                <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'') or hasRole(''ROLE_SUPPORT'')')}">
+                    <a href="/issue" th:href="@{#}" onclick="$('#formIssue').submit();">Issues</a>
+                    <form id="formIssue" th:action="@{/issue}" method="get">
+                    </form>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li th:if="${#authorization.expression('!isAuthenticated()')}">

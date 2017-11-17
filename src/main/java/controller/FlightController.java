@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import service.CrewService;
 import service.FlightService;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class FlightController {
@@ -53,8 +55,6 @@ public class FlightController {
     @RequestMapping(value = "/newFlight", method = RequestMethod.GET)
     public String retrieveFlight(Model model, @RequestParam(value = "cmd", required = true) String cmd,
                                  @RequestParam(value = "idFlight", required = false) Integer idFlight) {
-        logger.info("newFlight GET");
-        logger.info("newFlight GET id newFlight" + idFlight);
         Flight flight = null;
 
         //закидываем все роли команды в view. ORDER by ID
@@ -98,32 +98,37 @@ public class FlightController {
      * @return
      */
     @RequestMapping(value = "/newFlight", method = RequestMethod.POST)
-    public String commitChanges(@ModelAttribute Flight flight, @RequestParam(value = "cmd", required = true) String cmd) {
+    public String commitChanges(@RequestParam(value = "prevAircraftId", required = false) Integer prevAircraftId,
+                                @ModelAttribute Flight flight, @RequestParam(value = "cmd", required = true) String cmd) {
 
         /*по самолету приходит только ид, нужно связать с настоящим обьектом*/
+        Aircraft aircraft = null;
         if (cmd.equals("create")) {
-            Aircraft aircraft = aircraftService.get(flight.getAircraft().getId());
+            aircraft = aircraftService.get(flight.getAircraft().getId());
             flight.setAircraft(aircraft);
             aircraft.setFlight(flight);
             //для записи в БД заполняем полностью обьект
-            flight.getCrewMemberList().stream().forEach(crewMember -> {
-                crewMember.setFlight(flight);
-            });
+            flight.setCrewMemberList(flight.getCrewMemberList().stream().
+                    map(crewMember -> crewService.get(crewMember.getId()).setFlight(flight)).collect(Collectors.toList()));
         }
         if (cmd.equals("edit")) {
-            List<CrewMember> currentCrew = crewService.getAllByFlight(flight.getId());
-            Aircraft aircraft = aircraftService.get(flight.getAircraft().getId());
-            flight.setAircraft(aircraft);
-            aircraft.setFlight(flight);
+            if (prevAircraftId != flight.getAircraft().getId())
+                 aircraftService.insert(aircraftService.get(prevAircraftId).setFlight(null));
+            Flight currFlight = flightService.get(flight.getId());
+            aircraft = aircraftService.get(flight.getAircraft().getId());
+            List<CrewMember> currentCrew = currFlight.getCrewMemberList();
             int i = 0;
             for (CrewMember member : flight.getCrewMemberList()) {
-                if (member.getId() != null)
-                    currentCrew.set(i, member);
+                if (member.getId() != null) {
+                    currentCrew.set(i, crewService.get(member.getId()));
+                }
                 i++;
             }
-            flight.setCrewMemberList(currentCrew);
+            currFlight.setAircraft(aircraft);
+            aircraft.setFlight(currFlight);
+            currFlight.setCrewMemberList(currentCrew);
         }
-        if (flightService.insert(flight))
+        if (aircraftService.insert(aircraft))
             resultMessage = cmd.equals("create") ? "create flight ok" : "update flight ok";
         else
             resultMessage = cmd.equals("create") ? "create flight error" : "update flight error";

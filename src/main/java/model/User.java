@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -177,6 +178,17 @@ public class User {
             ticketsList = new ArrayList<>();
         }
         ticketsList.add(ticket.setUser(this));
+        return this;
+    }
+
+    public User removeTicket(Integer idTicket) {
+        Iterator<Ticket> itPlaceTicketList = ticketsList.iterator();
+        while (itPlaceTicketList.hasNext()) { //лямбы не работают с сущностями еклипслинка
+            Ticket iter = itPlaceTicketList.next();
+            if (iter.getId() == idTicket) {
+                itPlaceTicketList.remove();
+            }
+        }
         return this;
     }
 

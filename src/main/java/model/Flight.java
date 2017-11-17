@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Entity
@@ -42,6 +43,7 @@ public class Flight {
     //cascade = CascadeType.ALL, mappedBy = "flight"
     @OneToMany
     @JoinTable(name = "flight_crew", joinColumns = @JoinColumn(name = "flight_id"), inverseJoinColumns = @JoinColumn(name = "member_id"))
+    @OrderBy("function.id ASC")
     private List<CrewMember> crewMemberList;
 
     @OneToOne
@@ -151,5 +153,16 @@ public class Flight {
 
     public SimpleDateFormat getDateFmt() {
         return dateFmt;
+    }
+
+    public Flight removeTicket(Integer idTicket) {
+        Iterator<Ticket> itPlaceTicketList = ticketList.iterator();
+        while (itPlaceTicketList.hasNext()) { //лямбы не работают с сущностями еклипслинка
+            Ticket iter = itPlaceTicketList.next();
+            if (iter.getId() == idTicket) {
+                itPlaceTicketList.remove();
+            }
+        }
+        return this;
     }
 }

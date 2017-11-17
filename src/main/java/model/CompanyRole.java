@@ -51,7 +51,7 @@ public class CompanyRole {
     }
 
     public CompanyRole addCrewMember(CrewMember member) {
-        if (crewMemberSet == null) { // лямбды к сожалению в еклипслинке ломают связывание
+        if (crewMemberSet == null) {
             crewMemberSet = new HashSet<>();
         }
         crewMemberSet.add(member.setFunction(this));

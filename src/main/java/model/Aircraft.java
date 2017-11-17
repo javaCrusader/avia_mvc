@@ -33,8 +33,9 @@ public class Aircraft {
         return flight;
     }
 
-    public void setFlight(Flight flight) {
+    public Aircraft setFlight(Flight flight) {
         this.flight = flight;
+        return this;
     }
 
     /**

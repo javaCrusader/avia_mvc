@@ -1,17 +1,13 @@
 package service;
 
-import model.City;
-import model.Country;
-import model.Flight;
-import model.Ticket;
+import model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import repository.CityRepository;
-import repository.CountryRepository;
-import repository.FlightRepository;
-import repository.TicketRepository;
+import repository.*;
 
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -19,6 +15,9 @@ public class FlightService {
 
     @Autowired
     FlightRepository flightRepository;
+
+    @Autowired
+    AircraftRepository aircraftRepository;
 
     @Autowired
     CityRepository cityRepository;
@@ -29,32 +28,16 @@ public class FlightService {
     @Autowired
     TicketRepository ticketRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    IssueRepository issueRepository;
 
     public boolean insert(Flight flight) {
-        return flightRepository.save(flight) != null;
+       return flightRepository.save(flight) != null;
     }
 
-    public boolean insertTicket (Ticket ticket) {
-        return ticketRepository.save(ticket) !=null;
-    }
-
-    public void deleteTicket (Integer idTicket) {
-        ticketRepository.delete(idTicket);
-    }
-
-
-    public boolean update(Flight flight) {
-        Flight old = flightRepository.findOne(flight.getId());
-        if (old == null)
-            return false;
-        old.setName(flight.getName());
-        old.setAircraft(flight.getAircraft());
-        old.setDone(flight.isDone());
-        old.setStart(flight.getStart());
-        old.setEnd(flight.getEnd());
-        old.setTicketList(flight.getTicketList());
-        return flightRepository.save(old) != null;
-    }
 
     public List<Flight> get(String name) {
         return flightRepository.findByName(name);
@@ -80,9 +63,44 @@ public class FlightService {
         return flightRepository.findOne(id);
     }
 
+    public Ticket getTicket (Integer id) {
+        return ticketRepository.findOne(id);
+    }
+
+    public boolean addIssueForTicket (List<Ticket> ticketList) {
+        for (Ticket ticket : ticketList) {
+            Issue issue = new Issue();
+            issue.setCreated(new Date(System.currentTimeMillis()));
+            issue.setUser(ticket.getUser());
+            issue.setProblem("user id: " + ticket.getUser().getId() +" lost ticket id: " + ticket.getId() + " from " + ticket.getFlight().getStartCity().getName()
+                    + " to " + ticket.getFlight().getEndCity().getName() + " on date " + ticket.getFlight().getStart().toString()
+                    + " cost " + ticket.getFactCost());
+
+            Iterator<Ticket> itUserTicketList = ticket.getUser().getTicketsList().iterator();
+            while (itUserTicketList.hasNext()) {
+                Ticket iter = itUserTicketList.next();
+                if (iter.getId() == ticket.getId()) {
+                    itUserTicketList.remove();
+                }
+            }
+            userRepository.save(ticket.getUser());
+            //ticketRepository.delete(ticket.getId());
+            if (issueRepository.save(issue) == null)
+                return false;
+        }
+        return true;
+    }
+
     @Transactional
     public boolean delete(Integer id) {
-        if (flightRepository.findOne(id) == null)
+        Flight flight = flightRepository.findOne(id);
+        if (!flight.getTicketList().isEmpty()) {
+            addIssueForTicket(flight.getTicketList());
+        }
+        flight.getAircraft().setFlight(null);
+        if (aircraftRepository.save(flight.getAircraft()) == null)
+            return false;
+        if (flight == null)
             return false;
         flightRepository.delete(id);
         return true;
