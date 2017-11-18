@@ -27,7 +27,7 @@ public class AircraftPlaceInfo {
     @Column(name = "price")
     private int price;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "airPlace")
+    @OneToMany( mappedBy = "airPlace")
     private List<Ticket> ticketList;
 
     public AircraftPlaceInfo() {

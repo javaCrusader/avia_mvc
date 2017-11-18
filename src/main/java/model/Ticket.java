@@ -111,8 +111,9 @@ public class Ticket {
         return flight;
     }
 
-    public void setFlight(Flight flight) {
+    public Ticket setFlight(Flight flight) {
         this.flight = flight;
+        return this;
     }
 
 }

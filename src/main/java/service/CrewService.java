@@ -80,12 +80,12 @@ public class CrewService {
     }
 
     public CompanyRole getCompanyRole(Integer id) {
-        return companyRoleRepository.getOne(id);
+        return companyRoleRepository.findOne(id);
     }
 
     @Transactional
     public boolean delete(Integer id) {
-        CrewMember member = crewRepository.getOne(id);
+        CrewMember member = crewRepository.findOne(id);
         if (member == null || (member.getFlight() != null && !member.getFlight().isDone()))
             return false;
         crewRepository.delete(id);

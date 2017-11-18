@@ -70,6 +70,10 @@
         <appender-ref ref="FILE-AUDIT2" />
     </logger>
 
+    <logger name="security.SecurityServiceImpl" level="debug" additivity="false">
+        <appender-ref ref="FILE-AUDIT2" />
+    </logger>
+
     <logger name="controller.ErrorController" level="debug" additivity="false">
         <appender-ref ref="FILE-AUDIT2" />
     </logger>

@@ -35,7 +35,7 @@ public class FlightService {
     IssueRepository issueRepository;
 
     public boolean insert(Flight flight) {
-       return flightRepository.save(flight) != null;
+        return flightRepository.save(flight) != null;
     }
 
 
@@ -63,16 +63,17 @@ public class FlightService {
         return flightRepository.findOne(id);
     }
 
-    public Ticket getTicket (Integer id) {
+    public Ticket getTicket(Integer id) {
         return ticketRepository.findOne(id);
     }
 
-    public boolean addIssueForTicket (List<Ticket> ticketList) {
+
+    public boolean addIssueForTicket(List<Ticket> ticketList) {
         for (Ticket ticket : ticketList) {
             Issue issue = new Issue();
             issue.setCreated(new Date(System.currentTimeMillis()));
             issue.setUser(ticket.getUser());
-            issue.setProblem("user id: " + ticket.getUser().getId() +" lost ticket id: " + ticket.getId() + " from " + ticket.getFlight().getStartCity().getName()
+            issue.setProblem("user id: " + ticket.getUser().getId() + " lost ticket id: " + ticket.getId() + " from " + ticket.getFlight().getStartCity().getName()
                     + " to " + ticket.getFlight().getEndCity().getName() + " on date " + ticket.getFlight().getStart().toString()
                     + " cost " + ticket.getFactCost());
 
@@ -84,23 +85,32 @@ public class FlightService {
                 }
             }
             userRepository.save(ticket.getUser());
-            //ticketRepository.delete(ticket.getId());
             if (issueRepository.save(issue) == null)
                 return false;
+            if (!this.deleteTicket(ticket.getId()) ) ;
+                return false;
         }
+        return true;
+    }
+
+    public boolean deleteTicket(Integer id) {
+        Ticket old = ticketRepository.findOne(id);
+        if (old == null)
+            return false;
+        ticketRepository.delete(id);
         return true;
     }
 
     @Transactional
     public boolean delete(Integer id) {
         Flight flight = flightRepository.findOne(id);
+        if (flight == null)
+            return false;
         if (!flight.getTicketList().isEmpty()) {
             addIssueForTicket(flight.getTicketList());
         }
         flight.getAircraft().setFlight(null);
         if (aircraftRepository.save(flight.getAircraft()) == null)
-            return false;
-        if (flight == null)
             return false;
         flightRepository.delete(id);
         return true;

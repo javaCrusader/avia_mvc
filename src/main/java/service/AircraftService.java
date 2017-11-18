@@ -96,12 +96,12 @@ public class AircraftService {
     @Transactional
     public boolean delete(Integer id) {
         Aircraft old = aircraftRepository.findOne(id);
+        if (old == null)
+            return false;
         if (!old.getFlight().getTicketList().isEmpty()) {
             if (!flightService.addIssueForTicket(old.getFlight().getTicketList()))
                 return false;
         }
-        if (old == null)
-            return false;
         aircraftRepository.delete(old.getId());
         return true;
     }

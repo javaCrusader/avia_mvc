@@ -4,6 +4,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -19,7 +20,7 @@ public class Flight {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "flight")
+    @OneToMany (mappedBy = "flight")
     private List<Ticket> ticketList;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -153,6 +154,14 @@ public class Flight {
 
     public SimpleDateFormat getDateFmt() {
         return dateFmt;
+    }
+
+    public Flight addTicket(Ticket ticket) {
+        if (ticketList == null) {
+            ticketList = new ArrayList<>();
+        }
+        ticketList.add(ticket.setFlight(this));
+        return this;
     }
 
     public Flight removeTicket(Integer idTicket) {

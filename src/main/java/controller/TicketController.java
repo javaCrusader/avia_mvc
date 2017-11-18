@@ -57,14 +57,16 @@ public class TicketController {
     }
 
 
-
     @RequestMapping(value = "/tickets", method = RequestMethod.POST)
     public String ticketHomePost(@RequestParam(value = "idTicket", required = true) Integer idTicket, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             User user = userService.getByName(authentication.getName());
             Ticket ticket = flightService.getTicket(idTicket);
-
+            if (ticket == null) {
+                resultMessage = "delete ticket fail";
+                return "redirect:/tickets";
+            }
             long curTime = System.currentTimeMillis();
             Date curDate = new Date(curTime);
             long diff = (ticket.getFlight().getStart().getTime() - curDate.getTime()) / 86400000;
@@ -79,11 +81,9 @@ public class TicketController {
             AircraftPlaceInfo place = ticket.getAirPlace().setCapacity(ticket.getAirPlace().getCapacity() + 1);
             place.removeTicket(idTicket);
 
-            Flight flight = ticket.getFlight();
-            flight.removeTicket(idTicket);
 
-            if (userService.saveCompleteObject(user) && aircraftService.savePlaceInfo(place) && flightService.insert(flight)) {
-                ticketRepository.delete(idTicket);
+            if (userService.saveCompleteObject(user) && aircraftService.savePlaceInfo(place)
+                    && flightService.deleteTicket(idTicket)) {
                 resultMessage = "delete ticket ok";
             } else
                 resultMessage = "delete ticket fail";
@@ -110,18 +110,20 @@ public class TicketController {
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             User user = userService.getByName(authentication.getName());
             AircraftPlaceInfo place = aircraftService.getPlaceInfo(ticket.getAirPlace().getId());
+            Flight flight = flightService.get(ticket.getFlight().getId());
             if (place.getCapacity() > 1) {
                 place.setCapacity(place.getCapacity() - 1);
             } else {
                 resultMessage = "no free place in this class";
                 return "redirect:/main";
             }
-            if (user.getBalance() >= ticket.getAirPlace().getPrice()) {
+            if (user.getBalance() - ticket.getAirPlace().getPrice() > 0) {
                 user.setBalance(user.getBalance() - place.getPrice());
                 ticket.setFactCost(place.getPrice());
-                //place.addTicket(ticket);
+                flight.addTicket(ticket);
+                place.addTicket(ticket);
                 user.addTicket(ticket);
-                if (userService.saveCompleteObject(user) && aircraftService.savePlaceInfo(place))
+                if (userService.saveCompleteObject(user) && aircraftService.savePlaceInfo(place) && flightService.insert(flight))
                     resultMessage = "ticket addition ok";
                 else
                     resultMessage = "ticket addition fail";

@@ -5,17 +5,7 @@ USE `test`;
 -- Table structure for table `user_role`
 --
 DROP TABLE IF EXISTS `user_roles`;
-DROP TABLE IF EXISTS `users`;
 DROP TABLE IF EXISTS `roles`;
-
-
-
-CREATE TABLE users (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `role`
@@ -59,12 +49,23 @@ CREATE TABLE persistent_logins (
 
 LOCK TABLES `roles` WRITE;
 INSERT INTO `roles` VALUES (1,'ROLE_USER');
-INSERT INTO `roles` VALUES (1,'ROLE_ADMIN');
-INSERT INTO `roles` VALUES (1,'ROLE_CREWMANAGER');
-INSERT INTO `roles` VALUES (1,'ROLE_ACCOUNTANT');
-INSERT INTO `roles` VALUES (1,'ROLE_FLIGHTMANAGER');
-INSERT INTO `roles` VALUES (1,'ROLE_AIRCRAFTMANAGER');
+INSERT INTO `roles` VALUES (2,'ROLE_ADMIN');
+INSERT INTO `roles` VALUES (3,'ROLE_CREWMANAGER');
+INSERT INTO `roles` VALUES (4,'ROLE_ACCOUNTANT');
+INSERT INTO `roles` VALUES (5,'ROLE_FLIGHTMANAGER');
+INSERT INTO `roles` VALUES (6,'ROLE_AIRCRAFTMANAGER');
 UNLOCK TABLES;
+
+INSERT INTO `company_roles` (`ID`, `NAME`) VALUES ('1', 'FUNC_PILOT');
+INSERT INTO `company_roles` (`ID`, `NAME`) VALUES ('2', 'FUNC_SECOND_PILOT');
+INSERT INTO `company_roles` (`ID`, `NAME`) VALUES ('3', 'FUNC_STEWARD');
+INSERT INTO `company_roles` (`ID`, `NAME`) VALUES ('4', 'FUNC_ENGINEER');
+
+INSERT INTO `class_data` (`ID`, `NAME`) VALUES ('1', 'luxe');
+INSERT INTO `class_data` (`ID`, `NAME`) VALUES ('2', 'econom');
+INSERT INTO `class_data` (`ID`, `NAME`) VALUES ('3', 'business');
+INSERT INTO `class_data` (`ID`, `NAME`) VALUES ('4', 'super_luxe');
+
 
 
 LOCK TABLES `country_list` WRITE;
@@ -97,16 +98,22 @@ INSERT INTO `city_list` (`ID`,`LATITUDE`,`LONGITUDE`,`NAME`,`country_id`) VALUES
 INSERT INTO `city_list` (`ID`,`LATITUDE`,`LONGITUDE`,`NAME`,`country_id`) VALUES (18,NULL,NULL,'Almata',6);
 UNLOCK TABLES;
 
+INSERT INTO `vacations` (`ID`,`END`,`START`) VALUES (1,'2019-03-04','2019-03-04');
+INSERT INTO `vacations` (`ID`,`END`,`START`) VALUES (2,'2018-02-02','2018-03-05');
+INSERT INTO `vacations` (`ID`,`END`,`START`) VALUES (3,'2018-08-03','2018-06-09');
+INSERT INTO `vacations` (`ID`,`END`,`START`) VALUES (4,'2021-07-03','2018-07-03');
+INSERT INTO `vacations` (`ID`,`END`,`START`) VALUES (5,'2019-11-03','2019-10-10');
+INSERT INTO `vacations` (`ID`,`END`,`START`) VALUES (6,'2018-05-03','2018-04-06');
+INSERT INTO `vacations` (`ID`,`END`,`START`) VALUES (7,'2018-06-03','2018-05-03');
+INSERT INTO `vacations` (`ID`,`END`,`START`) VALUES (8,'2019-02-02','2019-02-05');
 
-LOCK TABLES `crew` WRITE;
-INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (20,'preved',13,1,90);
-INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (21,'andrew',4,4,91);
-INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (23,'kolyan',5,9,93);
-INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (24,'leha',13,1,94);
-INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (25,'boris',13,10,95);
-INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (26,'ivan',10,1,96);
-INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (27,'mary',5,9,97);
-INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (28,'serega',13,10,98);
-INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (29,'eduard',20,4,99);
-UNLOCK TABLES;
+
+INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (1,'ivan',2323,1,1);
+INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (2,'blevan',232,2,2);
+INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (3,'kolyan',342,3,3);
+INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (4,'serega',343,4,4);
+INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (5,'hower',23,1,5);
+INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (6,'samsung',23,2,6);
+INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (7,'preved',2323,3,7);
+INSERT INTO `crew` (`ID`,`NAME`,`SALARYINHOUR`,`function_id`,`vacation_id`) VALUES (8,'diman',2323,4,8);
 
