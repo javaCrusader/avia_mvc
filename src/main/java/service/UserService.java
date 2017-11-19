@@ -1,24 +1,22 @@
 package service;
 
-import model.*;
+import model.Issue;
+import model.Role;
+import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import repository.IssueRepository;
 import repository.RoleRepository;
-import repository.TicketRepository;
 import repository.UserRepository;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private TicketRepository ticketRepository;
 
     @Autowired
     private IssueRepository issueRepository;
@@ -71,14 +69,17 @@ public class UserService {
         return userRepository.findByName(name);
     }
 
-    public List<Issue> getAllIssue () {
+    public List<Issue> getAllIssue() {
         return issueRepository.findAll();
     }
 
+    public Issue getIssue(Integer idIssue) {
+        return issueRepository.findOne(idIssue);
+    }
 
-    public boolean addIssue(User user, Issue issue) {
-        user.getIssueList().add(issue);
+    public boolean saveIssue(Issue issue) {
         return issueRepository.save(issue) != null;
     }
+
 }
 

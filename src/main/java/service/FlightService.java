@@ -17,9 +17,6 @@ public class FlightService {
     FlightRepository flightRepository;
 
     @Autowired
-    AircraftRepository aircraftRepository;
-
-    @Autowired
     CityRepository cityRepository;
 
     @Autowired
@@ -29,10 +26,13 @@ public class FlightService {
     TicketRepository ticketRepository;
 
     @Autowired
-    UserRepository userRepository;
+    IssueRepository issueRepository;
 
     @Autowired
-    IssueRepository issueRepository;
+    UserService userService;
+
+    @Autowired
+    AircraftService aircraftService;
 
     public boolean insert(Flight flight) {
         return flightRepository.save(flight) != null;
@@ -75,7 +75,7 @@ public class FlightService {
             issue.setUser(ticket.getUser());
             issue.setProblem("user id: " + ticket.getUser().getId() + " lost ticket id: " + ticket.getId() + " from " + ticket.getFlight().getStartCity().getName()
                     + " to " + ticket.getFlight().getEndCity().getName() + " on date " + ticket.getFlight().getStart().toString()
-                    + " cost " + ticket.getFactCost());
+                    + " cost " + ticket.getFactCost() +"    \n" + ticket.toString());
 
             Iterator<Ticket> itUserTicketList = ticket.getUser().getTicketsList().iterator();
             while (itUserTicketList.hasNext()) {
@@ -84,11 +84,11 @@ public class FlightService {
                     itUserTicketList.remove();
                 }
             }
-            userRepository.save(ticket.getUser());
+            userService.saveCompleteObject(ticket.getUser());
             if (issueRepository.save(issue) == null)
                 return false;
-            if (!this.deleteTicket(ticket.getId()) ) ;
-                return false;
+          /*  if (!this.deleteTicket(ticket.getId()) ) ;
+                return false;*/
         }
         return true;
     }
@@ -98,7 +98,20 @@ public class FlightService {
         if (old == null)
             return false;
         ticketRepository.delete(id);
+
         return true;
+    }
+
+    @Transactional
+    public boolean persistTicket(Ticket ticket, Flight flight, User user, AircraftPlaceInfo place ) {
+        if (ticketRepository.save(ticket) == null)
+            return false;
+        flight.addTicket(ticket);
+        user.addTicket(ticket);
+        place.addTicket(ticket);
+        if (this.insert(flight) && userService.saveCompleteObject(user) && aircraftService.savePlaceInfo(place))
+            return true;
+        return false;
     }
 
     @Transactional
@@ -110,7 +123,7 @@ public class FlightService {
             addIssueForTicket(flight.getTicketList());
         }
         flight.getAircraft().setFlight(null);
-        if (aircraftRepository.save(flight.getAircraft()) == null)
+        if (!aircraftService.insert(flight.getAircraft()))
             return false;
         flightRepository.delete(id);
         return true;

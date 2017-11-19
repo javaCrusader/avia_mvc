@@ -35,8 +35,9 @@ public class Issue {
         return closed;
     }
 
-    public void setClosed(boolean closed) {
+    public Issue setClosed(boolean closed) {
         this.closed = closed;
+        return this;
     }
 
     @Transient

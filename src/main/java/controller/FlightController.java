@@ -124,9 +124,16 @@ public class FlightController {
                 }
                 i++;
             }
-            currFlight.setAircraft(aircraft);
-            aircraft.setFlight(currFlight);
-            currFlight.setCrewMemberList(currentCrew);
+           /* currFlight.setName(flight.getName());
+            currFlight.setStart(flight.getStart());
+            currFlight.setEnd(flight.getEnd());
+            currFlight.setDone(flight.isDone());*/
+            flight.setAircraft(aircraft);
+            flight.setCrewMemberList(currentCrew);
+            flight.setTicketList(currFlight.getTicketList());
+            aircraft.setFlight(flight);
+
+           // currFlight.setCrewMemberList(currentCrew);
         }
         if (aircraftService.insert(aircraft))
             resultMessage = cmd.equals("create") ? "create flight ok" : "update flight ok";

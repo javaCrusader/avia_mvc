@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AccountantResult {
+public class AccountantResultWrapper {
 
     List<SingleResult> accountantResultList = new ArrayList<>();
 

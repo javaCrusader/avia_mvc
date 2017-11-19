@@ -59,35 +59,34 @@ public class TicketController {
 
     @RequestMapping(value = "/tickets", method = RequestMethod.POST)
     public String ticketHomePost(@RequestParam(value = "idTicket", required = true) Integer idTicket, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            User user = userService.getByName(authentication.getName());
-            Ticket ticket = flightService.getTicket(idTicket);
-            if (ticket == null) {
-                resultMessage = "delete ticket fail";
-                return "redirect:/tickets";
-            }
-            long curTime = System.currentTimeMillis();
-            Date curDate = new Date(curTime);
-            long diff = (ticket.getFlight().getStart().getTime() - curDate.getTime()) / 86400000;
-            if (diff < 1) {
-                resultMessage = "sorry. too late. less then 1 day remains to flight";
-                return "redirect:/tickets";
-            }
-
-            user.removeTicket(idTicket);
-            user.setBalance(user.getBalance() + ticket.getFactCost());
-
-            AircraftPlaceInfo place = ticket.getAirPlace().setCapacity(ticket.getAirPlace().getCapacity() + 1);
-            place.removeTicket(idTicket);
-
-
-            if (userService.saveCompleteObject(user) && aircraftService.savePlaceInfo(place)
-                    && flightService.deleteTicket(idTicket)) {
-                resultMessage = "delete ticket ok";
-            } else
-                resultMessage = "delete ticket fail";
+        Ticket ticket = flightService.getTicket(idTicket);
+        if (ticket == null) {
+            resultMessage = "delete ticket fail";
+            return "redirect:/tickets";
         }
+        long curTime = System.currentTimeMillis();
+        Date curDate = new Date(curTime);
+        long diff = (ticket.getFlight().getStart().getTime() - curDate.getTime()) / 86400000;
+        if (diff < 1) {
+            resultMessage = "sorry. too late. less then 1 day remains to flight";
+            return "redirect:/tickets";
+        }
+
+        User user = ticket.getUser();
+        user.removeTicket(idTicket);
+        user.setBalance(user.getBalance() + ticket.getFactCost());
+
+        AircraftPlaceInfo place = ticket.getAirPlace().setCapacity(ticket.getAirPlace().getCapacity() + 1);
+        place.removeTicket(idTicket);
+
+        Flight flight = ticket.getFlight();
+        flight.removeTicket(idTicket);
+
+        if (flightService.insert(flight) && userService.saveCompleteObject(user) && aircraftService.savePlaceInfo(place)) {
+            resultMessage = "delete ticket ok";
+        } else
+            resultMessage = "delete ticket fail";
+
 
         return "redirect:/tickets";
     }
@@ -117,13 +116,10 @@ public class TicketController {
                 resultMessage = "no free place in this class";
                 return "redirect:/main";
             }
-            if (user.getBalance() - ticket.getAirPlace().getPrice() > 0) {
+            if (user.getBalance() - place.getPrice() > 0) {
                 user.setBalance(user.getBalance() - place.getPrice());
                 ticket.setFactCost(place.getPrice());
-                flight.addTicket(ticket);
-                place.addTicket(ticket);
-                user.addTicket(ticket);
-                if (userService.saveCompleteObject(user) && aircraftService.savePlaceInfo(place) && flightService.insert(flight))
+                if (flightService.persistTicket(ticket, flight, user, place))
                     resultMessage = "ticket addition ok";
                 else
                     resultMessage = "ticket addition fail";

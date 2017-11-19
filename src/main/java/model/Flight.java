@@ -20,7 +20,7 @@ public class Flight {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany (mappedBy = "flight")
+    @OneToMany (cascade = CascadeType.ALL ,mappedBy = "flight", orphanRemoval = true)
     private List<Ticket> ticketList;
 
     @Temporal(TemporalType.TIMESTAMP)

@@ -21,8 +21,7 @@
     <div class="text-left">
         <span th:utext="${message}"></span>
     </div>
-    <form th:action="@{/issue}" method="post">
-
+    <form th:action="@{/issue}" method="post" th:object="${issueWrapper}">
         <table class="table table-condensed">
             <thead>
             <tr>
@@ -33,12 +32,18 @@
                 <td>Solved</td>
             </tr>
             </thead>
-            <tr th:each="issue : ${issueList}">
-                <td th:text="${issue.id}"></td>
-                <td th:text="${issue.problem}"></td>
-                <td th:text="${#dates.format(issue.created, 'dd-MM-yyyy HH:mm')}"></td>
+            <tr th:each="issue,stat : *{issueList}">
+                <td th:text="${issue.id}" >
+                </td>
+                <td th:text="${issue.problem}" th:field="*{issueList[__${stat.index}__].problem}">
+                </td>
+                <td th:text="${#dates.format(issue.created, 'dd-MM-yyyy HH:mm')}">
+                </td>
                 <td th:text="${issue.user.name}"></td>
-                <td><input type="checkbox" /></td>
+                <td>
+                    <input type="checkbox" th:field="*{issueList[__${stat.index}__].closed}"/>
+                    <input type="hidden"  th:field="*{issueList[__${stat.index}__].id}"/>
+                </td>
             </tr>
         </table>
 
