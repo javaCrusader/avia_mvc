@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import result.search.SearchParam;
 import service.AircraftService;
 import service.CrewService;
 import service.FlightService;
@@ -36,8 +37,14 @@ public class FlightController {
     private String resultMessage;
 
     @RequestMapping(value = "/flights", method = RequestMethod.GET)
-    public String home(Model model) {
-        model.addAttribute("flightList", flightService.getAll());
+    public String home(@ModelAttribute SearchParam searchParam, @RequestParam(value = "cmd", required = false) String cmd,
+                       Model model) {
+        if (cmd != null && cmd.equals("search")) {
+            model.addAttribute("flightList", flightService.getAll());
+
+        } else
+            model.addAttribute("flightList", flightService.getAll());
+        model.addAttribute("searchParam", new SearchParam());
         model.addAttribute("message", resultMessage);
         resultMessage = null;
         return "flight/flights";
@@ -50,6 +57,16 @@ public class FlightController {
         else
             resultMessage = "delete fail";
         return "redirect:/flights";
+    }
+
+    @ModelAttribute(value = "countryMap")
+    private Map<String, List<City>> getCountryMap() {
+        List<Country> countryList = flightService.getAllCountries();
+        Map<String, List<City>> countryMap = new HashMap<>();
+        for (Country country : countryList) {
+            countryMap.put(country.getName(), flightService.getCitiesByCountry(country.getName()));
+        }
+        return countryMap;
     }
 
     @RequestMapping(value = "/newFlight", method = RequestMethod.GET)
@@ -65,13 +82,7 @@ public class FlightController {
         }
         model.addAttribute("peopleMap", peopleMap);
 
-        //почти такой же фокус с городами
-        List<Country> countryList = flightService.getAllCountries();
-        Map<String, List<City>> countryMap = new HashMap<>();
-        for (Country country : countryList) {
-            countryMap.put(country.getName(), flightService.getCitiesByCountry(country.getName()));
-        }
-        model.addAttribute("countryMap", countryMap);
+
         model.addAttribute("aircraftList", aircraftService.getAllFree());
 
         if (cmd.equals("create")) {
@@ -113,7 +124,7 @@ public class FlightController {
         }
         if (cmd.equals("edit")) {
             if (prevAircraftId != flight.getAircraft().getId())
-                 aircraftService.insert(aircraftService.get(prevAircraftId).setFlight(null));
+                aircraftService.insert(aircraftService.get(prevAircraftId).setFlight(null));
             Flight currFlight = flightService.get(flight.getId());
             aircraft = aircraftService.get(flight.getAircraft().getId());
             List<CrewMember> currentCrew = currFlight.getCrewMemberList();
@@ -133,7 +144,7 @@ public class FlightController {
             flight.setTicketList(currFlight.getTicketList());
             aircraft.setFlight(flight);
 
-           // currFlight.setCrewMemberList(currentCrew);
+            // currFlight.setCrewMemberList(currentCrew);
         }
         if (aircraftService.insert(aircraft))
             resultMessage = cmd.equals("create") ? "create flight ok" : "update flight ok";

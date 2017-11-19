@@ -9,24 +9,56 @@
     <title>Simbirsoft Flights</title>
     <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
           th:href="@{/resources/css/bootstrap.min.css}"/>
-    <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}" />
+    <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/core.css}"/>
 </head>
 <body>
 <div th:replace="fragments/header :: header">Header</div>
 <div class="container">
-
-  <!--  <form action="/flights" method="post">
+    <form action="/flights" method="get" th:object="${searchParam}">
         <input type="hidden" name="cmd" value="search"/>
-        <div class="form-group col-xs-5">
-            <input type="date" name="dateStart"  class="form-control" required="true" placeholder="Type start date for search"/>
-            <input type="date" name="dateEnd" class="form-control" required="true" placeholder="Type end date for search"/>
-
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Start date</label>
+            <div class="col-sm-5">
+                <input type="datetime-local" th:field="*{startDate}" class="form-control" required="true"
+                       placeholder="Type start date for search"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">End date</label>
+            <div class="col-sm-5">
+                <input type="datetime-local" th:field="*{endDate}" class="form-control" required="true"
+                       placeholder="Type end date for search"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Start city</label>
+            <div class="col-sm-10">
+                <select th:field="*{startCity.id}">
+                    <optgroup th:each="country,stat : ${countryMap.keySet()}" class="form-group row"
+                              th:label="${country}">
+                        <option th:each="city : ${countryMap.get(country)}" th:value="${city.id}"
+                                th:text="${city.name}"></option>
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">End city</label>
+            <div class="col-sm-10">
+                <select th:field="*{endCity.id}">
+                    <optgroup th:each="country,stat : ${countryMap.keySet()}" class="form-group row"
+                              th:label="${country}">
+                        <option th:each="city : ${countryMap.get(country)}" th:value="${city.id}"
+                                th:text="${city.name}"></option>
+                    </optgroup>
+                </select>
+            </div>
         </div>
         <button type="submit" class="btn btn-info">
             <span class="glyphicon glyphicon-search"></span> Search
         </button>
-
-    </form> -->
+    </form>
 
     <div class="text-center">
         <h2 th:text="'Flight management list'"></h2>
@@ -54,8 +86,9 @@
                 <form th:action="@{/newFlight}" method="get">
                     <input type="hidden" name="idFlight" th:value="${flight.id}"/>
                     <input type="hidden" name="cmd" value="edit"/>
-                    <button type="submit" class="btn btn-info" th:text="${flight.id}"> </button>
-                </form></td>
+                    <button type="submit" class="btn btn-info" th:text="${flight.id}"></button>
+                </form>
+            </td>
             <td th:text="${flight.name}"></td>
             <td th:text="${flight.aircraft.name}"></td>
             <td th:text="${flight.startCity.name}"></td>
@@ -69,7 +102,8 @@
                     <input type="hidden" name="idFlight" th:value="${flight.id}"/>
                     <button type="submit" class="btn btn-info">del</button>
                     <input type="hidden" name="cmd" value="delete"/>
-                </form></td>
+                </form>
+            </td>
         </tr>
     </table>
     <form th:action="@{/newFlight}">
