@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+</head>
+<body th:fragment="search">
+<input type="hidden" name="cmd" value="search"/>
+<div class="form-group row">
+    <label class="col-sm-2 col-form-label col-form-label-lg">Start date</label>
+    <div class="col-sm-5">
+        <input type="datetime-local" th:field="*{startDate}" class="form-control" required="true"
+               placeholder="Type start date for search"/>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-sm-2 col-form-label col-form-label-lg">Start date</label>
+    <div class="col-sm-5 input-group date" id="datetimepicker1">
+        <input type="text" class="form-control" name="startDate" th:field = "*{startDate}"/>
+        <span class="input-group-addon">
+				<span class="glyphicon-calendar glyphicon"></span>
+			  </span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-sm-2 col-form-label col-form-label-lg">End date</label>
+    <div class="col-sm-5">
+        <input type="datetime-local" th:field="*{endDate}" class="form-control" required="true"
+               placeholder="Type end date for search"/>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-sm-2 col-form-label col-form-label-lg">Start city</label>
+    <div class="col-sm-10">
+        <select th:field="*{startCity.id}">
+            <optgroup th:each="country,stat : ${countryMap.keySet()}" class="form-group row"
+                      th:label="${country}">
+                <option th:each="city : ${countryMap.get(country)}" th:value="${city.id}"
+                        th:text="${city.name}"></option>
+            </optgroup>
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-sm-2 col-form-label col-form-label-lg">End city</label>
+    <div class="col-sm-10">
+        <select th:field="*{endCity.id}">
+            <optgroup th:each="country,stat : ${countryMap.keySet()}" class="form-group row"
+                      th:label="${country}">
+                <option th:each="city : ${countryMap.get(country)}" th:value="${city.id}"
+                        th:text="${city.name}"></option>
+            </optgroup>
+        </select>
+    </div>
+</div>
+<button type="submit" class="btn btn-info">
+    <span class="glyphicon glyphicon-search"></span> Search
+</button>
+
+<script src="/resources/js/jquery-3.2.1.min.js"></script>
+<script src="/resources/js/moment-with-locales.min.js"></script>
+<script src="/resources/js/bootstrap.min.js"></script>
+<script src="/resources/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            locale: 'ru',
+            stepping: 10,
+            format: 'DD.MM.YYYY HH:mm',
+            defaultDate: moment('01.11.2017 01:00').format('DD.MM.YYYY HH:mm'),
+            daysOfWeekDisabled: [0, 6]
+        });
+        $('#datetimepicker2').datetimepicker({
+            locale: 'ru'
+        });
+    });
+</script>
+</body>
+</html>
