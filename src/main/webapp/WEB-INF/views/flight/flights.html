@@ -16,48 +16,7 @@
 <div th:replace="fragments/header :: header">Header</div>
 <div class="container">
     <form action="/flights" method="get" th:object="${searchParam}">
-        <input type="hidden" name="cmd" value="search"/>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label col-form-label-lg">Start date</label>
-            <div class="col-sm-5">
-                <input type="datetime-local" th:field="*{startDate}" class="form-control" required="true"
-                       placeholder="Type start date for search"/>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label col-form-label-lg">End date</label>
-            <div class="col-sm-5">
-                <input type="datetime-local" th:field="*{endDate}" class="form-control" required="true"
-                       placeholder="Type end date for search"/>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label col-form-label-lg">Start city</label>
-            <div class="col-sm-10">
-                <select th:field="*{startCity.id}">
-                    <optgroup th:each="country,stat : ${countryMap.keySet()}" class="form-group row"
-                              th:label="${country}">
-                        <option th:each="city : ${countryMap.get(country)}" th:value="${city.id}"
-                                th:text="${city.name}"></option>
-                    </optgroup>
-                </select>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label col-form-label-lg">End city</label>
-            <div class="col-sm-10">
-                <select th:field="*{endCity.id}">
-                    <optgroup th:each="country,stat : ${countryMap.keySet()}" class="form-group row"
-                              th:label="${country}">
-                        <option th:each="city : ${countryMap.get(country)}" th:value="${city.id}"
-                                th:text="${city.name}"></option>
-                    </optgroup>
-                </select>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-info">
-            <span class="glyphicon glyphicon-search"></span> Search
-        </button>
+    <div th:replace="fragments/search :: search">search</div>
     </form>
 
     <div class="text-center">

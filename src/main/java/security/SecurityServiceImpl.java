@@ -8,7 +8,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @Service
@@ -43,5 +46,19 @@ public class SecurityServiceImpl implements SecurityService {
 
             logger.debug(String.format("Successfully %s auto logged in", username));
         }
+    }
+
+    @Override
+    public void authUser(String username, String password, HttpServletRequest request) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
+
+        request.getSession();
+
+        authenticationToken.setDetails(new WebAuthenticationDetails(request));
+        //Authentication authenticatedUser = authenticationManager.authenticate(authenticationToken);
+
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 }

@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import repository.AircraftClassRepository;
 import repository.AircraftPlaceRepository;
 import repository.AircraftRepository;
-import repository.TicketRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,6 @@ public class AircraftService {
     private FlightService flightService;
 
 
-
     Logger logger = LoggerFactory.getLogger(AircraftService.class);
 
     @Transactional
@@ -53,7 +51,6 @@ public class AircraftService {
     public boolean savePlaceInfo(AircraftPlaceInfo placeInfo) {
         return placeRepository.save(placeInfo) != null;
     }
-
 
     public boolean insert(Aircraft aircraft) {
         return aircraftRepository.save(aircraft) != null;

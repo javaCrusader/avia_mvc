@@ -17,5 +17,4 @@ public class IssueWrapper {
         return this;
     }
 
-
 }

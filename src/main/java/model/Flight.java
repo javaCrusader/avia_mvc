@@ -20,7 +20,7 @@ public class Flight {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany (cascade = CascadeType.ALL ,mappedBy = "flight", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "flight", orphanRemoval = true)
     private List<Ticket> ticketList;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -52,7 +52,6 @@ public class Flight {
     private Aircraft aircraft;
 
     private boolean isDone;
-
 
     @Transient
     private SimpleDateFormat dateFmt;
@@ -134,7 +133,6 @@ public class Flight {
         this.end = end;
     }
 
-
     public Integer getId() {
         return id;
     }
@@ -150,7 +148,6 @@ public class Flight {
     public void setTicketList(List<Ticket> ticketList) {
         this.ticketList = ticketList;
     }
-
 
     public SimpleDateFormat getDateFmt() {
         return dateFmt;

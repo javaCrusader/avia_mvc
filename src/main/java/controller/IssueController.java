@@ -9,12 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import result.issuesResult.IssueWrapper;
 import service.UserService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class IssueController {
@@ -39,12 +35,12 @@ public class IssueController {
     @RequestMapping(value = "/issue", method = RequestMethod.POST)
     public String homePost(@ModelAttribute IssueWrapper issueWrapper) {
         for (Issue issue : issueWrapper.getIssueList()) {
-            if (!userService.saveIssue(userService.getIssue(issue.getId()).setClosed(issue.isClosed()))){
+            if (!userService.saveIssue(userService.getIssue(issue.getId()).setClosed(issue.isClosed()))) {
                 resultMessage = "save issue failed";
                 return "redirect:/main";
             }
         }
-        resultMessage = "no such issue";
+        resultMessage = "issue saved";
         return "redirect:/issue";
     }
 

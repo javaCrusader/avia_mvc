@@ -1,7 +1,6 @@
 package model;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,7 +24,6 @@ public class AircraftClassData {
     public AircraftClassData(String name) {
         this.name = name;
     }
-
 
 
     public Set<AircraftPlaceInfo> getPlaceDataSet() {

@@ -24,7 +24,7 @@ public class AccountantController {
 
 
     @RequestMapping(value = "/accountant", method = RequestMethod.GET)
-    public String home(@RequestParam (value = "submit", required = false) String cmd, @ModelAttribute(value = "accResult") AccountantResultWrapper calcResult, Model model) {
+    public String home(@RequestParam(value = "submit", required = false) String cmd, @ModelAttribute(value = "accResult") AccountantResultWrapper calcResult, Model model) {
         AccountantResultWrapper accResult = new AccountantResultWrapper();
         for (CrewMember member : crewService.getAll()) {
             SingleResult result = new SingleResult();

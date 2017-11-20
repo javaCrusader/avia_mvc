@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import repository.*;
+import result.search.SearchParam;
 
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FlightService {
@@ -47,6 +49,16 @@ public class FlightService {
         return flightRepository.findAll();
     }
 
+    public List<Flight> getAllBySearchParams(SearchParam param) {
+        return flightRepository.findAll().stream().filter(flight ->
+                flight.getStartCity().getId().equals(param.getStartCity().getId())
+                        && flight.getEndCity().getId().equals(param.getEndCity().getId())
+                        && param.getStartDate().getTime() <= flight.getStart().getTime()
+                        && param.getEndDate().getTime() >= flight.getEnd().getTime()
+
+        ).collect(Collectors.toList());
+    }
+
     public List<City> getAllCities() {
         return cityRepository.findAllByOrderByNameAsc();
     }
@@ -67,15 +79,12 @@ public class FlightService {
         return ticketRepository.findOne(id);
     }
 
-
     public boolean addIssueForTicket(List<Ticket> ticketList) {
         for (Ticket ticket : ticketList) {
             Issue issue = new Issue();
             issue.setCreated(new Date(System.currentTimeMillis()));
             issue.setUser(ticket.getUser());
-            issue.setProblem("user id: " + ticket.getUser().getId() + " lost ticket id: " + ticket.getId() + " from " + ticket.getFlight().getStartCity().getName()
-                    + " to " + ticket.getFlight().getEndCity().getName() + " on date " + ticket.getFlight().getStart().toString()
-                    + " cost " + ticket.getFactCost() +"    \n" + ticket.toString());
+            issue.setProblem(ticket.toString());
 
             Iterator<Ticket> itUserTicketList = ticket.getUser().getTicketsList().iterator();
             while (itUserTicketList.hasNext()) {
@@ -87,8 +96,6 @@ public class FlightService {
             userService.saveCompleteObject(ticket.getUser());
             if (issueRepository.save(issue) == null)
                 return false;
-          /*  if (!this.deleteTicket(ticket.getId()) ) ;
-                return false;*/
         }
         return true;
     }
@@ -103,7 +110,7 @@ public class FlightService {
     }
 
     @Transactional
-    public boolean persistTicket(Ticket ticket, Flight flight, User user, AircraftPlaceInfo place ) {
+    public boolean persistTicket(Ticket ticket, Flight flight, User user, AircraftPlaceInfo place) {
         if (ticketRepository.save(ticket) == null)
             return false;
         flight.addTicket(ticket);

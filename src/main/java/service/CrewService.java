@@ -28,7 +28,6 @@ public class CrewService {
     Logger logger = LoggerFactory.getLogger(CrewService.class);
 
     public boolean insert(CrewMember member) {
-        //return crewRepository.save(member.setFunction(companyRoleRepository.getOne(member.getFunction().getId()))) != null;
         return crewRepository.save(member) != null; //В ОБщем виде - обьект подготовить ранее.
     }
 

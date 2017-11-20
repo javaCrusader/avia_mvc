@@ -15,10 +15,6 @@ public class ErrorController {
 
     private static Logger logger = LoggerFactory.getLogger(ErrorController.class);
 
-    {
-        logger.info("ERROR CONTROLLER HERE");
-    }
-
     @ExceptionHandler(Exception.class)
     public String exception(Exception throwable, Model model) {
         logger.error("Exception during execution of SpringSecurity application", throwable);

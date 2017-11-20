@@ -2,7 +2,6 @@ package result.accountantResult;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.Duration;
 import java.util.Date;
 
 public class SingleResult {
@@ -82,7 +81,7 @@ public class SingleResult {
     public void calculate() {
         if (start == null || end == null || end.getTime() < start.getTime())
             return;
-        long difference =  (end.getTime()-start.getTime())/86400000;
+        long difference = (end.getTime() - start.getTime()) / 86400000;
 
         salaryInPeriod = difference * salaryInHour;
     }

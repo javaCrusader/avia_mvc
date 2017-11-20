@@ -17,6 +17,16 @@ public class SearchParam {
 
     private City endCity;
 
+    public String getTestString() {
+        return testString;
+    }
+
+    public void setTestString(String testString) {
+        this.testString = testString;
+    }
+
+    private String testString;
+
     public Date getStartDate() {
         return startDate;
     }

@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,11 +39,13 @@ public class FlightController {
     public String home(@ModelAttribute SearchParam searchParam, @RequestParam(value = "cmd", required = false) String cmd,
                        Model model) {
         if (cmd != null && cmd.equals("search")) {
-            model.addAttribute("flightList", flightService.getAll());
+            model.addAttribute("flightList", flightService.getAllBySearchParams(searchParam));
+            model.addAttribute("searchParam", searchParam);
 
-        } else
+        } else {
             model.addAttribute("flightList", flightService.getAll());
-        model.addAttribute("searchParam", new SearchParam());
+            model.addAttribute("searchParam", new SearchParam());
+        }
         model.addAttribute("message", resultMessage);
         resultMessage = null;
         return "flight/flights";
@@ -81,7 +82,6 @@ public class FlightController {
             peopleMap.put(function.getName(), crewService.getAllFreeByFunction(function.getName()));
         }
         model.addAttribute("peopleMap", peopleMap);
-
 
         model.addAttribute("aircraftList", aircraftService.getAllFree());
 
@@ -135,16 +135,10 @@ public class FlightController {
                 }
                 i++;
             }
-           /* currFlight.setName(flight.getName());
-            currFlight.setStart(flight.getStart());
-            currFlight.setEnd(flight.getEnd());
-            currFlight.setDone(flight.isDone());*/
             flight.setAircraft(aircraft);
             flight.setCrewMemberList(currentCrew);
             flight.setTicketList(currFlight.getTicketList());
             aircraft.setFlight(flight);
-
-            // currFlight.setCrewMemberList(currentCrew);
         }
         if (aircraftService.insert(aircraft))
             resultMessage = cmd.equals("create") ? "create flight ok" : "update flight ok";

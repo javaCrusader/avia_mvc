@@ -63,7 +63,7 @@
     <logger name="service.TestService" level="debug" additivity="false">
         <appender-ref ref="FILE-AUDIT2" />
     </logger>
-    <logger name="controller.UserController" level="debug" additivity="false">
+    <logger name="controller.UserMainPageController" level="debug" additivity="false">
         <appender-ref ref="FILE-AUDIT2" />
     </logger>
     <logger name="controller.AircraftController" level="debug" additivity="false">
@@ -83,6 +83,10 @@
     </logger>
 
     <logger name="controller.FlightController" level="debug" additivity="false">
+        <appender-ref ref="FILE-AUDIT2" />
+    </logger>
+
+    <logger name="serviceTest.AircraftServiceTest" level="debug" additivity="false">
         <appender-ref ref="FILE-AUDIT2" />
     </logger>
 
