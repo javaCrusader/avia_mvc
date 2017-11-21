@@ -10,26 +10,43 @@
 
     <mvc:resources mapping="/resources/**" location="/web-resources/"/>
 
+
+
     <beans:bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
         <beans:property name="prefix" value="WEB-INF/views/" />
         <beans:property name="suffix" value=".html" />
         <beans:property name="templateMode" value="HTML5" />
     </beans:bean>
 
-    <beans:bean id="templateEngine"
-                class="org.thymeleaf.spring4.SpringTemplateEngine">
+    <beans:bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <beans:property name="templateResolver" ref="templateResolver" />
         <beans:property name="additionalDialects">
             <beans:set>
-                <!-- Note the package would change to 'springsecurity3' if you are using that version -->
                 <beans:bean class="org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect"/>
             </beans:set>
         </beans:property>
-        <beans:property name="templateResolver" ref="templateResolver" />
     </beans:bean>
+
 
     <beans:bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
         <beans:property name="templateEngine" ref="templateEngine" />
     </beans:bean>
+
+    <beans:bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <beans:property name="formatters">
+            <beans:set>
+                <beans:bean class="conversion.RoleFormatter" />
+            </beans:set>
+        </beans:property>
+        <beans:property name="converters">
+            <beans:set>
+                <beans:bean class="conversion.RoleConverter"/>
+            </beans:set>
+        </beans:property>
+    </beans:bean>
+
+    <!--.format.support.FormattingConversionServiceFactoryBean -->
+
 
     <mvc:annotation-driven/>
 </beans:beans>

@@ -3,19 +3,10 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
     <title>Simbirsoft Flight</title>
-    <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
-          th:href="@{/resources/css/bootstrap.min.css}"/>
-    <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen"
-          th:href="@{/resources/css/core.css}"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="/resources/js/bootstrap.min.js"></script>
-
+    <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}"/>
+    <script th:src="@{/resources/js/jquery-3.2.1.min.js}"></script>
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
@@ -59,6 +50,8 @@
             </div>
         </div>
 
+      <!-- start/end picker -->
+        <div th:replace="fragments/datePickerPeriod :: datePickerPeriod">search</div>
 
         <div th:if="${cmd} == 'edit'">
             <div class="form-group row">
@@ -80,20 +73,7 @@
                 </select>
             </div>
         </div>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label col-form-label-lg">Date start</label>
-            <div class="col-sm-10">
-                <input type="datetime-local" th:type="datetime-local" class="form-control" th:field="*{start}"
-                       required="true"/>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label col-form-label-lg">Date end</label>
-            <div class="col-sm-10">
-                <input type="datetime-local" th:type="datetime-local" class="form-control" th:field="*{end}"
-                       required="true"/>
-            </div>
-        </div>
+
 
         <div class="form-group row">
             <label class="col-sm-2 col-form-label col-form-label-lg">Is done</label>
@@ -131,13 +111,14 @@
             </div>
         </div>
 
-
         <div class="form-group">
             <div class="col-sm-13">
                 <button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
                 <a class="btn btn-primary" href="/flights">Cancel</a>
             </div>
         </div>
+
+
     </form>
 </div>
 <div class="text-center" th:insert="~{fragments/footer :: footer}">&copy; 2017 Simbirsoft</div>

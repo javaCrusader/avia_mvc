@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body th:fragment="datePickerPeriod" >
+<link href="../../../web-resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet" th:href="@{/resources/css/bootstrap-datetimepicker.min.css}" />
+<div class="form-group row" >
+    <label class="col-sm-2 col-form-label col-form-label-lg">Start date</label>
+    <div style="padding-left: 15px" class="col-sm-5 input-group date" id="datetimepicker1">
+        <input type="text" class="form-control" name="startDate" value="${startStringDate}" th:field = "*{startStringDate}" required="true"/>
+        <span class="input-group-addon">
+				<span class="glyphicon-calendar glyphicon"></span>
+			  </span>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-sm-2 col-form-label col-form-label-lg">End date</label>
+    <div style="padding-left: 15px" class="col-sm-5 input-group date" id="datetimepicker2">
+        <input type="text" class="form-control" name="endDate" value="${endStringDate}" th:field = "*{endStringDate}" required="true"/>
+        <span class="input-group-addon">
+				<span class="glyphicon-calendar glyphicon"></span>
+			  </span>
+    </div>
+</div>
+<script src="/resources/js/moment-with-locales.min.js"></script>
+<script src="/resources/js/bootstrap.min.js"></script>
+<script src="/resources/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            locale: 'ru',
+            stepping: 10,
+            format: 'DD.MM.YYYY HH:mm',
+            /* defaultDate: moment('01.11.2017 02:00').format('DD.MM.YYYY HH:mm'),*/
+            /*daysOfWeekDisabled: [0, 8]*/
+        });
+        $('#datetimepicker2').datetimepicker({
+            locale: 'ru',
+            stepping: 10,
+            format: 'DD.MM.YYYY HH:mm',
+            /* defaultDate: moment('01.11.2017 02:00').format('DD.MM.YYYY HH:mm'),*/
+            /* daysOfWeekDisabled: [0, 8]*/
+        });
+    });
+</script>
+</body>
+</html>

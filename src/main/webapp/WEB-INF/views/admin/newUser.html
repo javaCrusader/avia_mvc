@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Crew member</title>
+    <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}"/>
+    <script src="/resources/js/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <div class="text-center">
+        <h2 th:text="'User'"></h2>
+    </div>
+    <form th:action="@{/newUser}" method="post" th:object="${user}">
+        <input type="hidden" name="cmd" th:value="${cmd}"/>
+        <div th:if="${cmd} == 'edit'">
+            <input type="hidden" th:field="*{id}"/>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Username</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control form-control-lg" th:field="*{name}" required = "true"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">First name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control form-control-lg" th:field="*{firstName}" required = "true"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Last name</label>
+            <div class="col-sm-10">
+                <!-- <input type="date" th:value="${member.vacation.end}" class="form-control form-control-lg" th:field="*{vacation.start}"/> -->
+                <input type="text"  class="form-control" th:field="*{lastName}" required = "true"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">email</label>
+            <div class="col-sm-10">
+                <!-- <input type="date" th:value="${member.vacation.end}" class="form-control form-control-lg" th:field="*{vacation.end}"/> -->
+                <input type="email"  class="form-control" th:field="*{email}" required = "true"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Address</label>
+            <div class="col-sm-10">
+                <!-- <input type="date" th:value="${member.vacation.end}" class="form-control form-control-lg" th:field="*{vacation.end}"/> -->
+                <input type="text" class="form-control" th:field="*{address}" required = "true"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Phone number</label>
+            <div class="col-sm-10">
+                <!-- <input type="date" th:value="${member.vacation.end}" class="form-control form-control-lg" th:field="*{vacation.end}"/> -->
+                <input type="text" th:field="*{phoneNumber}" placeholder="Phone number"
+                       class="form-control" required="true"/>
+                <label th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"
+                    class="validation-message"></label>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">Phone number</label>
+            <div class="col-sm-10">
+                <!-- <input type="date" th:value="${member.vacation.end}" class="form-control form-control-lg" th:field="*{vacation.end}"/> -->
+                <input type="text" th:field="*{creditCard}" placeholder="Credit card"
+                       class="form-control" required="true"/>
+                <label th:if="${#fields.hasErrors('creditCard')}" th:errors="*{creditCard}"
+                       class="validation-message"></label>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label col-form-label-lg">User Roles</label>
+            <div class="col-sm-10">
+                <!--<select th:field="*{roleList}" required = "true" multiple="multiple">
+                    <option th:each="role : ${fullRoleList}" th:value="${{role}}" th:text="${role.name}" ></option>
+                </select><-->
+
+                <select id="hobbies" th:field="*{hobbies}" size="10" multiple="multiple">
+                    <option th:each="hobby : ${allHobbies}"
+                            th:value="${{hobby}}"
+                            th:text="${hobby.description}">
+                        Cinema
+                    </option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-sm-13">
+                <button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
+                <a class="btn btn-primary" href="/admin">Cancel</a>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="text-center" th:insert="~{fragments/footer :: footer}">&copy; 2017 Simbirsoft</div>
+</body>
+</html>

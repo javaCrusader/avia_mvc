@@ -6,24 +6,27 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.unbescape.html.HtmlEscape;
 import result.search.SearchParam;
+import result.search.SearchParamService;
 import security.SecurityService;
 import service.FlightService;
 import service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,17 +48,30 @@ public class UserMainPageController {
 
     private String resultMessage;
 
+    @Autowired
+    private SearchParamService searchParamService;
+
     @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
     public String login() {
         return "user/login";
     }
 
 
+    protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(true);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+
     @RequestMapping(value = "/main", method = RequestMethod.GET)
     public String home(@ModelAttribute SearchParam searchParam, @RequestParam(value = "cmd", required = false) String cmd, Model model) {
         model.addAttribute("name", "anon");
         logger.info("DO_GET");
         if (cmd != null && cmd.equals("search")) {
+            if (!searchParamService.setStartEndDateFromString(searchParam)) {
+                model.addAttribute("message", "Datee input fatal error");
+                return "main";
+            }
             model.addAttribute("flightList", flightService.getAllBySearchParams(searchParam));
             model.addAttribute("searchParam", searchParam);
         } else {
@@ -66,6 +82,7 @@ public class UserMainPageController {
         resultMessage = null;
         return "main";
     }
+
 
     @ModelAttribute(value = "countryMap")
     private Map<String, List<City>> getCountryMap() {

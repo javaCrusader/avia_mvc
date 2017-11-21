@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import repository.*;
 import result.search.SearchParam;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -71,9 +72,36 @@ public class FlightService {
         return cityRepository.findAllByCountryNameEquals(country);
     }
 
+
+    /**
+     * @param id сразу переводим дату в текстовый формат для дальнейших манипуляций view.
+     * @return
+     */
     public Flight get(Integer id) {
         return flightRepository.findOne(id);
     }
+
+    public Flight getAndFormatDate(Integer id) {
+        Flight flight = flightRepository.findOne(id);
+        if (flight != null && flight.getStart() != null && flight.getEnd() != null) {
+            flight.setStartStringDate(flight.getDateFmt().format(flight.getStart()));
+            flight.setEndStringDate(flight.getDateFmt().format(flight.getEnd()));
+        }
+        return flight;
+    }
+
+    public boolean parseDateFromString(Flight flight) {
+        if (flight == null)
+            return false;
+        try {
+            flight.setStart(flight.getDateFmt().parse(flight.getStartStringDate()));
+            flight.setEnd(flight.getDateFmt().parse(flight.getEndStringDate()));
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
+    }
+
 
     public Ticket getTicket(Integer id) {
         return ticketRepository.findOne(id);

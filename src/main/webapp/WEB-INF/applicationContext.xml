@@ -13,10 +13,12 @@
     <beans:import resource="applicationMVC.xml"/>
     <beans:import resource="applicationSecurity.xml"/>
 
+
+
     <context:component-scan base-package="service"/>
     <context:component-scan base-package="security"/>
     <context:component-scan base-package="controller"/>
     <context:component-scan base-package="result"/>
-
+    <context:component-scan base-package="conversion"/>
 
 </beans:beans>

@@ -3,6 +3,7 @@ package model;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,11 +28,15 @@ public class Flight {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date start;
 
+    @Transient
+    private String startStringDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date end;
 
+    @Transient
+    private String endStringDate;
 
     @ManyToOne
     @JoinColumn(name = "start_city_id")
@@ -57,8 +62,25 @@ public class Flight {
     private SimpleDateFormat dateFmt;
 
     {
-        dateFmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        dateFmt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     }
+
+    public String getStartStringDate() {
+        return startStringDate;
+    }
+
+    public void setStartStringDate(String startStringDate) {
+        this.startStringDate = startStringDate;
+    }
+
+    public String getEndStringDate() {
+        return endStringDate;
+    }
+
+    public void setEndStringDate(String endStringDate) {
+        this.endStringDate = endStringDate;
+    }
+
 
     public List<CrewMember> getCrewMemberList() {
         return crewMemberList;

@@ -31,12 +31,6 @@ public class UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-    public boolean insert(User user, Set<Role> roles) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoleList(roles);
-        return userRepository.save(user) != null;
-    }
-
     /**
      * @param user by default
      * @return true/false for sucsess matching
@@ -46,6 +40,12 @@ public class UserService {
         Set<Role> roles = new HashSet<>();
         roles.add(roleRepository.findByName("ROLE_USER"));
         roles.add(roleRepository.findByName("ROLE_ADMIN"));
+        user.setRoleList(roles);
+        return userRepository.save(user) != null;
+    }
+
+    public boolean insertWithRoles(User user, Set<Role> roles) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRoleList(roles);
         return userRepository.save(user) != null;
     }
@@ -69,6 +69,15 @@ public class UserService {
     public User getByName(String name) {
         return userRepository.findByName(name);
     }
+
+    public User get(Integer id) {
+        return userRepository.findOne(id);
+    }
+
+    public List<User> getAll() {
+        return userRepository.findAllByOrderByIdAsc();
+    }
+
 
     public List<Issue> getAllIssue() {
         return issueRepository.findAll();

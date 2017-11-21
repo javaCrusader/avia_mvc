@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
-          th:href="@{/resources/css/bootstrap.min.css}"/>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top" th:fragment="header">
@@ -45,6 +43,11 @@
                 <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'') or hasRole(''ROLE_SUPPORT'')')}">
                     <a href="/issue" th:href="@{#}" onclick="$('#formIssue').submit();">Issues</a>
                     <form id="formIssue" th:action="@{/issue}" method="get">
+                    </form>
+                </li>
+                <li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                    <a href="/admin" th:href="@{#}" onclick="$('#formAdmin').submit();">Admin</a>
+                    <form id="formAdmin" th:action="@{/admin}" method="get">
                     </form>
                 </li>
             </ul>

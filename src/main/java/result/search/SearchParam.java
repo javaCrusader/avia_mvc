@@ -3,29 +3,59 @@ package result.search;
 import model.City;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class SearchParam {
 
+    @Transient
+    private SimpleDateFormat dateFmt;
+    {
+        dateFmt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+    }
+
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private Date startDate;
+    private Date startDate ;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date endDate;
+
+    private String startStringDate;
+
+    private String endStringDate;
 
     private City startCity;
 
     private City endCity;
 
-    public String getTestString() {
-        return testString;
+    public String getStartStringDate() {
+        return startStringDate;
     }
 
-    public void setTestString(String testString) {
-        this.testString = testString;
+    public void setStartStringDate(String startStringDate) {
+        this.startStringDate = startStringDate;
     }
 
-    private String testString;
+    public String getEndStringDate() {
+        return endStringDate;
+    }
+
+    public void setEndStringDate(String endStringDate) {
+        this.endStringDate = endStringDate;
+    }
+
+    public SimpleDateFormat getDateFmt() {
+        return dateFmt;
+    }
+
+    public void setDateFmt(SimpleDateFormat dateFmt) {
+        this.dateFmt = dateFmt;
+    }
 
     public Date getStartDate() {
         return startDate;

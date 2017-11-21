@@ -40,6 +40,9 @@ public class User {
 
     private long passport;
 
+    @NumberFormat
+    private String creditCard;
+
     @Email(message = "*Please provide a valid Email")
     @NotEmpty(message = "*Please provide an email")
     private String email;
@@ -55,6 +58,17 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Issue> issueList;
 
+    @Transient
+    private List<Hobby> hobbies;
+
+    public List<Hobby> getHobbies() {
+        return hobbies;
+    }
+
+    public void setHobbies(List<Hobby> hobbies) {
+        this.hobbies = hobbies;
+    }
+
     public User() {
     }
 
@@ -62,6 +76,14 @@ public class User {
         this.name = username;
         this.password = password;
         this.roleList = roles;
+    }
+
+    public String getCreditCard() {
+        return creditCard;
+    }
+
+    public void setCreditCard(String creditCard) {
+        this.creditCard = creditCard;
     }
 
     public int getBalance() {

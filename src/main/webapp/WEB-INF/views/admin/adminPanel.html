@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
-    <title>Simbirsoft Crew</title>
+    <title>Admin panel</title>
     <link href="../../../web-resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
           th:href="@{/resources/css/bootstrap.min.css}"/>
     <link href="../../../web-resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}" />
@@ -16,7 +11,7 @@
 <div th:replace="fragments/header :: header">Header</div>
 <div class="container">
     <div class="text-center">
-        <h2 th:text="'Ticket list'"></h2>
+        <h2 th:text="'User list'"></h2>
     </div>
     <div class="text-left">
         <span th:utext="${message}"></span>
@@ -26,30 +21,35 @@
     <table class="table table-condensed">
         <thead>
         <tr>
-            <td>Number</td>
+            <td>Id</td>
+            <td>User name</td>
             <td>First name</td>
             <td>Last name</td>
-            <td>Surname</td>
-            <td>Class</td>
-            <td>Flight name</td>
-            <td>Date flight</td>
+            <td>Email</td>
         </tr>
         </thead>
-        <tr th:each="ticket : ${ticketList}">
-            <td th:text="${ticket.id}"></td>
-            <td th:text="${ticket.firstName}"></td>
-            <td th:text="${ticket.lastName}"></td>
-            <td th:text="${ticket.surName}"></td>
-            <td th:text="${ticket.airPlace.airClass.name}"></td>
-            <td th:text="${ticket.flight.name}"></td>
-            <td th:text="${#dates.format(ticket.flight.start, 'dd-MM-yyyy HH:mm')}"></td>
+        <tr th:each="user : ${userList}">
             <td>
-                <form th:action="@{/tickets}" method="post">
-                    <input type="hidden" name="idTicket" th:value="${ticket.id}"/>
+                <form th:action="@{/newUser}" method="get">
+                    <input type="hidden" name="idUser" th:value="${user.id}"/>
+                    <input type="hidden" name="cmd" value="edit"/>
+                    <button type="submit" class="btn btn-info" th:text="${user.id}"> </button>
+                </form></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.email}"></td>
+            <td>
+                <form th:action="@{/admin}" method="post">
+                    <input type="hidden" name="idUser" th:value="${user.id}"/>
                     <button type="submit" class="btn btn-info">del</button>
                 </form></td>
         </tr>
     </table>
+    <form th:action="@{/newMember}">
+        <button class="btn btn-lg btn-primary" type="Submit" th:text="Create"></button>
+        <input type="hidden" name="cmd" value="create"/>
+    </form>
 </div>
 <div class="text-center" th:insert="~{fragments/footer :: footer}">&copy; 2017 Simbirsoft</div>
 </body>

@@ -66,6 +66,10 @@
     <logger name="controller.UserMainPageController" level="debug" additivity="false">
         <appender-ref ref="FILE-AUDIT2" />
     </logger>
+    <logger name="controller.MainController" level="debug" additivity="false">
+        <appender-ref ref="FILE-AUDIT2" />
+    </logger>
+
     <logger name="controller.AircraftController" level="debug" additivity="false">
         <appender-ref ref="FILE-AUDIT2" />
     </logger>
@@ -74,9 +78,17 @@
         <appender-ref ref="FILE-AUDIT2" />
     </logger>
 
-    <logger name="controller.ErrorController" level="debug" additivity="false">
+    <logger name="conversion.RoleFormatter" level="debug" additivity="false">
         <appender-ref ref="FILE-AUDIT2" />
     </logger>
+    <logger name="conversion.WebMvcConfig" level="debug" additivity="false">
+        <appender-ref ref="FILE-AUDIT2" />
+    </logger>
+
+    <!--<logger name="controller.ErrorController" level="debug" additivity="false">
+         <appender-ref ref="FILE-AUDIT2" />
+     </logger>
+ -->
 
     <logger name="controller.CrewController" level="debug" additivity="false">
         <appender-ref ref="FILE-AUDIT2" />

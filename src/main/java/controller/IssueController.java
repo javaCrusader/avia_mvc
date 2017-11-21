@@ -22,7 +22,6 @@ public class IssueController {
 
     private String resultMessage;
 
-
     @RequestMapping(value = "/issue", method = RequestMethod.GET)
     public String home(Model model) {
         model.addAttribute("issueWrapper", new IssueWrapper().setIssueList(userService.getAllIssue()));
