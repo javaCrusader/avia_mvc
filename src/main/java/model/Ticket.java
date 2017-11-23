@@ -117,10 +117,10 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return ("user id: " + this.getUser().getId() + " |first name " + this.getFirstName() + " |last name " + this.getLastName()
-                + " |surname " + this.getSurName() + " |passport " + this.getPassport() + " |lost ticket id: " + this.getId() + " |from " + this.getFlight().getStartCity().getName()
-                + " |to " + this.getFlight().getEndCity().getName() + " |on date " + this.getFlight().getStart().toString()
-                + " |cost " + this.getFactCost());
+        return ("user id: " + this.getUser().getId() + " | first name " + this.getFirstName() + " | last name " + this.getLastName()
+                + " | surname " + this.getSurName() + " | passport " + this.getPassport() + " | lost ticket id: " + this.getId() + " | from " + this.getFlight().getStartCity().getName()
+                + " | to " + this.getFlight().getEndCity().getName() + " | on date " + this.getFlight().getStart().toString()
+                + " | cost " + this.getFactCost());
 
     }
 

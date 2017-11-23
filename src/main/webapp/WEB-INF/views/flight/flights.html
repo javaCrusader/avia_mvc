@@ -46,8 +46,8 @@
             <td th:text="${flight.aircraft.name}"></td>
             <td th:text="${flight.startCity.name}"></td>
             <td th:text="${flight.endCity.name}"></td>
-            <td th:text="${#dates.format(flight.start, 'dd-MM-yyyy HH:mm')}"></td>
-            <td th:text="${#dates.format(flight.end, 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="${{flight.start}}"></td>
+            <td th:text="${{flight.end}}"></td>
             <td th:text="${flight.done}"></td>
 
             <td>

@@ -42,7 +42,7 @@
             <td th:text="${ticket.surName}"></td>
             <td th:text="${ticket.airPlace.airClass.name}"></td>
             <td th:text="${ticket.flight.name}"></td>
-            <td th:text="${#dates.format(ticket.flight.start, 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="${{ticket.flight.start}}"></td>
             <td>
                 <form th:action="@{/tickets}" method="post">
                     <input type="hidden" name="idTicket" th:value="${ticket.id}"/>

@@ -2,7 +2,6 @@ package service;
 
 import model.CompanyRole;
 import model.CrewMember;
-import model.CrewMemberVacation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import repository.CompanyRoleRepository;
 import repository.CrewRepository;
 
-import java.text.ParseException;
 import java.util.List;
 
 @Service
-@Transactional
 public class CrewService {
 
     @Autowired
@@ -31,26 +28,6 @@ public class CrewService {
         return crewRepository.save(member) != null; //В ОБщем виде - обьект подготовить ранее.
     }
 
-    public boolean constructInsert(String name, String start, String end, String companyRole) {
-        CompanyRole crewMemberRole;
-        List<CompanyRole> companyRoleList = companyRoleRepository.findByName(companyRole);
-        CrewMemberVacation vac;
-        try {
-            vac = new CrewMemberVacation(start, end);
-            if (companyRoleList.isEmpty()) {
-                crewMemberRole = new CompanyRole();
-                crewMemberRole.setName(companyRole);
-                companyRoleRepository.save(crewMemberRole);
-            } else {
-                crewMemberRole = companyRoleList.get(0);
-            }
-        } catch (ParseException e1) {
-            logger.info("date parse fail");
-            return false;
-        }
-        return crewRepository.save(new CrewMember(name, crewMemberRole, vac)) != null;
-    }
-
     public List<CrewMember> get(String name) {
         return crewRepository.findByName(name);
     }
@@ -63,11 +40,10 @@ public class CrewService {
         return crewRepository.findAllByOrderByIdAsc();
     }
 
-
     public List<CrewMember> getAllFreeByFunction(String functionName) {
-        /*return crewRepository.findAllByOrderByIdAsc().stream().filter(member -> member.getFlight() == null && member.getFunction().getName().equals(functionName))
-                .collect(Collectors.toList());*/
-        return crewRepository.findAllByFunctionNameEqualsAndFlightNull(functionName);
+        List<CrewMember> result = crewRepository.findAllByFlightDoneAndFunctionName(true, functionName);
+        result.addAll(crewRepository.findAllByFunctionNameEqualsAndFlightNull(functionName));
+        return result;
     }
 
     public List<CrewMember> getAllByFlight(Integer id) {

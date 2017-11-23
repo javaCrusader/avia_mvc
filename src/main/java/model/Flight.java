@@ -1,12 +1,8 @@
 package model;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,19 +20,13 @@ public class Flight {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "flight", orphanRemoval = true)
     private List<Ticket> ticketList;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private Date start;
+    @Basic
+    @javax.persistence.Convert(converter = conversion.CustomLocalDateTimeConverter.class)
+    private LocalDateTime start;
 
-    @Transient
-    private String startStringDate;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private Date end;
-
-    @Transient
-    private String endStringDate;
+    @Basic
+    @javax.persistence.Convert(converter = conversion.CustomLocalDateTimeConverter.class)
+    private LocalDateTime end;
 
     @ManyToOne
     @JoinColumn(name = "start_city_id")
@@ -46,7 +36,6 @@ public class Flight {
     @JoinColumn(name = "end_city_id")
     private City endCity;
 
-    //cascade = CascadeType.ALL, mappedBy = "flight"
     @OneToMany
     @JoinTable(name = "flight_crew", joinColumns = @JoinColumn(name = "flight_id"), inverseJoinColumns = @JoinColumn(name = "member_id"))
     @OrderBy("function.id ASC")
@@ -56,31 +45,7 @@ public class Flight {
     @JoinColumn(name = "aircraft_id", nullable = false)
     private Aircraft aircraft;
 
-    private boolean isDone;
-
-    @Transient
-    private SimpleDateFormat dateFmt;
-
-    {
-        dateFmt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-    }
-
-    public String getStartStringDate() {
-        return startStringDate;
-    }
-
-    public void setStartStringDate(String startStringDate) {
-        this.startStringDate = startStringDate;
-    }
-
-    public String getEndStringDate() {
-        return endStringDate;
-    }
-
-    public void setEndStringDate(String endStringDate) {
-        this.endStringDate = endStringDate;
-    }
-
+    private boolean done;
 
     public List<CrewMember> getCrewMemberList() {
         return crewMemberList;
@@ -132,26 +97,26 @@ public class Flight {
     }
 
     public boolean isDone() {
-        return isDone;
+        return done;
     }
 
     public void setDone(boolean done) {
-        isDone = done;
+        this.done = done;
     }
 
-    public Date getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 
@@ -171,9 +136,6 @@ public class Flight {
         this.ticketList = ticketList;
     }
 
-    public SimpleDateFormat getDateFmt() {
-        return dateFmt;
-    }
 
     public Flight addTicket(Ticket ticket) {
         if (ticketList == null) {

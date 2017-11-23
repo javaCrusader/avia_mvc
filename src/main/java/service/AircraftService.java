@@ -34,6 +34,10 @@ public class AircraftService {
 
     Logger logger = LoggerFactory.getLogger(AircraftService.class);
 
+    {
+        logger.info( "aircraft service try to instantiate");
+    }
+
     @Transactional
     public boolean constructInsert(Map<String, Integer> classCapacityMap, String aircraftName) {
         Aircraft yak = new Aircraft();

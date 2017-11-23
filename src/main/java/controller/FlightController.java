@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import result.search.SearchParam;
-import result.search.SearchParamService;
 import service.AircraftService;
 import service.CrewService;
 import service.FlightService;
@@ -33,20 +32,12 @@ public class FlightController {
     @Autowired
     private CrewService crewService;
 
-    @Autowired
-    private SearchParamService searchParamService;
-
-
     private String resultMessage;
 
     @RequestMapping(value = "/flights", method = RequestMethod.GET)
     public String home(@ModelAttribute SearchParam searchParam, @RequestParam(value = "cmd", required = false) String cmd,
                        Model model) {
         if (cmd != null && cmd.equals("search")) {
-            if (!searchParamService.setStartEndDateFromString(searchParam)) {
-                model.addAttribute("message", "Date input error");
-                return "flight/flights";
-            }
             model.addAttribute("flightList", flightService.getAllBySearchParams(searchParam));
             model.addAttribute("searchParam", searchParam);
 
@@ -102,7 +93,7 @@ public class FlightController {
             model.addAttribute("cmd", "create");
         }
         if (cmd.equals("edit")) {
-            flight = flightService.getAndFormatDate(idFlight);
+            flight = flightService.get(idFlight);
             List<CrewMember> currentCrew = crewService.getAllByFlight(idFlight); //sorted by company role id
             model.addAttribute("currentCrew", currentCrew);
             model.addAttribute("cmd", "edit");
@@ -110,7 +101,6 @@ public class FlightController {
         model.addAttribute("flight", flight);
         return "flight/newFlight";
     }
-
 
 
     /**
@@ -124,11 +114,6 @@ public class FlightController {
 
         /*по самолету приходит только ид, нужно связать с настоящим обьектом*/
         Aircraft aircraft = null;
-        if (!flightService.parseDateFromString(flight)) {
-            resultMessage = "Fatal error with date input";
-            return "redirect:/flights";
-        }
-
         if (cmd.equals("create")) {
             aircraft = aircraftService.get(flight.getAircraft().getId());
             flight.setAircraft(aircraft);
@@ -136,7 +121,6 @@ public class FlightController {
             //для записи в БД заполняем полностью обьект
             flight.setCrewMemberList(flight.getCrewMemberList().stream().
                     map(crewMember -> crewService.get(crewMember.getId()).setFlight(flight)).collect(Collectors.toList()));
-
         }
         if (cmd.equals("edit")) {
             if (prevAircraftId != flight.getAircraft().getId())
@@ -160,6 +144,7 @@ public class FlightController {
             resultMessage = cmd.equals("create") ? "create flight ok" : "update flight ok";
         else
             resultMessage = cmd.equals("create") ? "create flight error" : "update flight error";
+        List<CrewMember> memberList = crewService.getAll();
         return "redirect:/flights";
     }
 

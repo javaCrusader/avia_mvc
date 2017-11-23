@@ -6,18 +6,20 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-
-
-
-    <beans:bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <beans:property name="locations" value ="classpath:config/db.properties"/>
+    <beans:bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <beans:property name="formatters">
+            <beans:set>
+                <beans:bean class="conversion.CustomDateTimeFormatter" />
+                <beans:bean class="conversion.CustomDateFormatter" />
+            </beans:set>
+        </beans:property>
     </beans:bean>
 
     <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <beans:property name="driverClassName" value="${jdbc.driverClassName}"/>
-        <beans:property name="url" value="${jdbc.url}"/>
-        <beans:property name="username" value="${jdbc.username}"/>
-        <beans:property name="password" value="${jdbc.password}"/>
+        <beans:property name="driverClassName" value="org.h2.Driver"/>
+        <beans:property name="url" value="jdbc:h2:mem:mydb"/>
+        <beans:property name="username" value="sa"/>
+        <beans:property name="password" value="sa"/>
     </beans:bean>
 
     <!-- For bootstrapping the Spring Repository -->
@@ -25,7 +27,7 @@
 
     <!-- Define EclipseLink JPA Vendor Adapter -->
     <beans:bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
-        <beans:property name="databasePlatform" value="org.eclipse.persistence.platform.database.MySQLPlatform"/>
+        <beans:property name="databasePlatform" value="org.eclipse.persistence.platform.database.H2Platform"/>
         <beans:property name="generateDdl" value="true"/>
         <beans:property name="showSql" value="true"/>
     </beans:bean>
@@ -48,7 +50,6 @@
         <beans:property name="entityManagerFactory" ref="entityManagerFactory"/>
     </beans:bean>
 
-    <tx:annotation-driven/>
 
 
 </beans:beans>

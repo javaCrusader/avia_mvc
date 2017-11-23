@@ -2,8 +2,12 @@ package service;
 
 import model.Issue;
 import model.Role;
+import model.Ticket;
 import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import repository.IssueRepository;
@@ -28,6 +32,9 @@ public class UserService {
     private RoleRepository roleRepository;
 
     @Autowired
+    private AircraftService aircraftService;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
@@ -44,9 +51,8 @@ public class UserService {
         return userRepository.save(user) != null;
     }
 
-    public boolean insertWithRoles(User user, Set<Role> roles) {
+    public boolean insertPwdEncode(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoleList(roles);
         return userRepository.save(user) != null;
     }
 
@@ -63,6 +69,7 @@ public class UserService {
         old.setAddress(user.getAddress());
         old.setEmail(user.getEmail());
         old.setPhoneNumber(user.getPhoneNumber());
+        old.setCreditCard(user.getCreditCard());
         return userRepository.save(old) != null;
     }
 
@@ -72,6 +79,25 @@ public class UserService {
 
     public User get(Integer id) {
         return userRepository.findOne(id);
+    }
+
+    public boolean delete(Integer id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+           if ( this.getByName(authentication.getName()).getId() == id )
+               return false;
+            User old = userRepository.findOne(id);
+            if (old == null)
+                return false;
+            if (old.getTicketsList() != null) {
+                for (Ticket ticket : old.getTicketsList()) {
+                    ticket.getAirPlace().setCapacity(ticket.getAirPlace().getCapacity()+1);
+                    aircraftService.savePlaceInfo(ticket.getAirPlace());
+                }
+            }
+            userRepository.delete(id);
+        }
+        return true;
     }
 
     public List<User> getAll() {

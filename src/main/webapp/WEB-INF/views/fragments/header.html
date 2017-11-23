@@ -59,9 +59,9 @@
                 </li>
                 <li th:if="${#authorization.expression('isAuthenticated()')}">
                     <div class="row">
-                        <label class="col-sm-10 col-form-label col-form-label-lg" style="color: white;"
+                        <label class="col-sm-15 col-form-label col-form-label-lg" style="color: white;"
                                th:text="'You loggged as ' + ${#authentication.getName()}">End date</label>
-                        <div class="col-sm-5"><a href="/logout" th:href="@{#}" onclick="$('#formLogout').submit();">
+                        <div class="col-sm-10"><a href="/logout" th:href="@{#}" onclick="$('#formLogout').submit();">
                             <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
                         </a>
                             <form style="visibility: hidden" id="formLogout" method="post" action="#"
@@ -69,12 +69,6 @@
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             </form>
                         </div>
-                    </div>
-                </li>
-                <li th:if="${#authorization.expression('isAuthenticated()')}">
-                    <label class="col-sm-2 col-form-label col-form-label-lg" style="color: white;">Balance</label>
-                    <div class="col-sm-10">
-                        <p type="text" class="col-form-label col-form-label-lg" style="color: white;" th:text="${userBalance}"></p>
                     </div>
                 </li>
             </ul>

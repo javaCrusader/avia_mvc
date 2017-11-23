@@ -1,6 +1,7 @@
 package serviceTest;
 
-/*
+
+import model.User;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,24 +12,29 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import service.AircraftService;
 
+@ContextConfiguration({"classpath:/testContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/testContext.xml"})
 public class AircraftServiceTest {
 
     Logger logger = LoggerFactory.getLogger(AircraftServiceTest.class);
+
+
     @Autowired
     AircraftService aircraftService;
 
-    {
-        logger.info("preved from test");
-    }
+    /* @Autowired
+     private DateFormatter dateFormatter;
 
+     {
+         logger.info("preved from test");
+         logger.info(user.toString());
+         logger.info(dateFormatter.toString());
+     }
+ */
     @Test
     public void test_true() {
 
-       // Assert.assertThat(aircraftService, instanceOf(AircraftService.class));
-        Assert.assertTrue(5==5);
-
+        // Assert.assertThat(aircraftService, instanceOf(AircraftService.class));
+        Assert.assertTrue(5 == 5);
     }
 }
-*/

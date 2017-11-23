@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<entity-mappings xmlns="http://www.eclipse.org/eclipselink/xsds/persistence/orm" version="2.5">
+    <converter class="conversion.CustomLocalDateConverter"/>
+    <converter class="conversion.CustomLocalDateTimeConverter"/>
+</entity-mappings>

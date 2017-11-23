@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import repository.*;
 import result.search.SearchParam;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -17,25 +16,25 @@ import java.util.stream.Collectors;
 public class FlightService {
 
     @Autowired
-    FlightRepository flightRepository;
+    private FlightRepository flightRepository;
 
     @Autowired
-    CityRepository cityRepository;
+    private CityRepository cityRepository;
 
     @Autowired
-    CountryRepository countryRepository;
+    private CountryRepository countryRepository;
 
     @Autowired
-    TicketRepository ticketRepository;
+    private TicketRepository ticketRepository;
 
     @Autowired
-    IssueRepository issueRepository;
+    private IssueRepository issueRepository;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    AircraftService aircraftService;
+    private AircraftService aircraftService;
 
     public boolean insert(Flight flight) {
         return flightRepository.save(flight) != null;
@@ -54,8 +53,8 @@ public class FlightService {
         return flightRepository.findAll().stream().filter(flight ->
                 flight.getStartCity().getId().equals(param.getStartCity().getId())
                         && flight.getEndCity().getId().equals(param.getEndCity().getId())
-                        && param.getStartDate().getTime() <= flight.getStart().getTime()
-                        && param.getEndDate().getTime() >= flight.getEnd().getTime()
+                        && param.getStart().isBefore(flight.getStart())
+                        && param.getEnd().isAfter(flight.getEnd())
 
         ).collect(Collectors.toList());
     }
@@ -73,35 +72,9 @@ public class FlightService {
     }
 
 
-    /**
-     * @param id сразу переводим дату в текстовый формат для дальнейших манипуляций view.
-     * @return
-     */
     public Flight get(Integer id) {
         return flightRepository.findOne(id);
     }
-
-    public Flight getAndFormatDate(Integer id) {
-        Flight flight = flightRepository.findOne(id);
-        if (flight != null && flight.getStart() != null && flight.getEnd() != null) {
-            flight.setStartStringDate(flight.getDateFmt().format(flight.getStart()));
-            flight.setEndStringDate(flight.getDateFmt().format(flight.getEnd()));
-        }
-        return flight;
-    }
-
-    public boolean parseDateFromString(Flight flight) {
-        if (flight == null)
-            return false;
-        try {
-            flight.setStart(flight.getDateFmt().parse(flight.getStartStringDate()));
-            flight.setEnd(flight.getDateFmt().parse(flight.getEndStringDate()));
-        } catch (ParseException e) {
-            return false;
-        }
-        return true;
-    }
-
 
     public Ticket getTicket(Integer id) {
         return ticketRepository.findOne(id);

@@ -15,7 +15,6 @@ public class AccountantResult {
     public void setAccountantResultList(List<SingleResult> accountantResultList) {
         this.accountantResultList = accountantResultList;
     }
-
 }
 
 

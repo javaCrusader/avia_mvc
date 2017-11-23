@@ -85,6 +85,4 @@ public class SingleResult {
 
         salaryInPeriod = difference * salaryInHour;
     }
-
-
 }

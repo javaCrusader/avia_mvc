@@ -11,7 +11,6 @@
     <mvc:resources mapping="/resources/**" location="/web-resources/"/>
 
 
-
     <beans:bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
         <beans:property name="prefix" value="WEB-INF/views/" />
         <beans:property name="suffix" value=".html" />
@@ -27,26 +26,21 @@
         </beans:property>
     </beans:bean>
 
-
     <beans:bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
         <beans:property name="templateEngine" ref="templateEngine" />
     </beans:bean>
 
+    <mvc:annotation-driven conversion-service="conversionService"/>
+
     <beans:bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <beans:property name="formatters">
             <beans:set>
+                <beans:bean class="conversion.CustomDateTimeFormatter" />
+                <beans:bean class="conversion.CustomDateFormatter" />
                 <beans:bean class="conversion.RoleFormatter" />
-            </beans:set>
-        </beans:property>
-        <beans:property name="converters">
-            <beans:set>
-                <beans:bean class="conversion.RoleConverter"/>
             </beans:set>
         </beans:property>
     </beans:bean>
 
-    <!--.format.support.FormattingConversionServiceFactoryBean -->
 
-
-    <mvc:annotation-driven/>
 </beans:beans>

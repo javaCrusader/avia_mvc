@@ -63,7 +63,6 @@ public class AircraftController {
                 airPlace = new AircraftPlaceInfo();
                 airPlace.setAirClass(classData);
                 airPlaceList.add(airPlace);
-
             }
             aircraft.setPlaceInfoList(airPlaceList);
             model.addAttribute("cmd", "create");

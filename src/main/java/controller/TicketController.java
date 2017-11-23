@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import repository.TicketRepository;
 import service.AircraftService;
 import service.FlightService;
 import service.UserService;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Controller
 public class TicketController {
@@ -37,8 +37,6 @@ public class TicketController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private TicketRepository ticketRepository;
 
     private String resultMessage;
 
@@ -64,9 +62,8 @@ public class TicketController {
             resultMessage = "delete ticket fail";
             return "redirect:/tickets";
         }
-        long curTime = System.currentTimeMillis();
-        Date curDate = new Date(curTime);
-        long diff = (ticket.getFlight().getStart().getTime() - curDate.getTime()) / 86400000;
+        LocalDateTime curDate = LocalDateTime.now();
+        long diff = ChronoUnit.DAYS.between(ticket.getFlight().getStart(), curDate);
         if (diff < 1) {
             resultMessage = "sorry. too late. less then 1 day remains to flight";
             return "redirect:/tickets";
@@ -93,13 +90,18 @@ public class TicketController {
 
     @RequestMapping(value = "/newTicket", method = RequestMethod.GET)
     public String newTicketHome(@RequestParam(value = "idFlight") Integer idFlight, Model model) {
-        Flight flight = flightService.get(idFlight);
-        model.addAttribute("message", resultMessage);
-        Ticket ticket = new Ticket();
-        ticket.setFlight(flight);
-        model.addAttribute("ticket", ticket);
-        resultMessage = null;
-        return "buy/newTicket";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            Flight flight = flightService.get(idFlight);
+            model.addAttribute("message", resultMessage);
+            Ticket ticket = new Ticket();
+            ticket.setFlight(flight);
+            model.addAttribute("ticket", ticket);
+            model.addAttribute("user", userService.getByName(authentication.getName()));
+            resultMessage = null;
+            return "buy/newTicket";
+        }
+        return "redirect:/main";
     }
 
 
@@ -116,8 +118,7 @@ public class TicketController {
                 resultMessage = "no free place in this class";
                 return "redirect:/main";
             }
-            if (user.getBalance() - place.getPrice() > 0) {
-                user.setBalance(user.getBalance() - place.getPrice());
+            if (user.getCreditCard() != null) {
                 ticket.setFactCost(place.getPrice());
                 if (flightService.persistTicket(ticket, flight, user, place))
                     resultMessage = "ticket addition ok";
@@ -125,7 +126,7 @@ public class TicketController {
                     resultMessage = "ticket addition fail";
 
             } else
-                resultMessage = "not enough balance";
+                resultMessage = "you must add billing method";
         }
         return "redirect:/main";
     }

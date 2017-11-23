@@ -44,8 +44,8 @@
             <td th:text="${crewMember.name}"></td>
             <td th:text="${crewMember.salaryInHour}"></td>
             <td th:text="${crewMember.function.name}"></td>
-            <td th:text="${#dates.format(crewMember.vacation.start, 'dd-MM-yyyy')}"></td>
-            <td th:text="${#dates.format(crewMember.vacation.end, 'dd-MM-yyyy')}"></td>
+            <td th:text="${{crewMember.vacation.start}}"></td>
+            <td th:text="${{crewMember.vacation.end}}"></td>
             <td>
                 <form th:action="@{/crew}" method="post">
                     <input type="hidden" name="idMember" th:value="${crewMember.id}"/>

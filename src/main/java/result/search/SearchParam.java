@@ -8,69 +8,35 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class SearchParam {
 
-    @Transient
-    private SimpleDateFormat dateFmt;
-    {
-        dateFmt = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-    }
+    private LocalDateTime start ;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private Date startDate ;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private Date endDate;
-
-    private String startStringDate;
-
-    private String endStringDate;
+    private LocalDateTime end;
 
     private City startCity;
 
     private City endCity;
 
-    public String getStartStringDate() {
-        return startStringDate;
+    public LocalDateTime getStart() {
+        return start;
     }
 
-    public void setStartStringDate(String startStringDate) {
-        this.startStringDate = startStringDate;
+    public void setStart(LocalDateTime start) {
+        this.start = start;
     }
 
-    public String getEndStringDate() {
-        return endStringDate;
+    public LocalDateTime getEnd() {
+        return end;
     }
 
-    public void setEndStringDate(String endStringDate) {
-        this.endStringDate = endStringDate;
-    }
-
-    public SimpleDateFormat getDateFmt() {
-        return dateFmt;
-    }
-
-    public void setDateFmt(SimpleDateFormat dateFmt) {
-        this.dateFmt = dateFmt;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
     }
 
     public City getStartCity() {

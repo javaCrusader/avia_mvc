@@ -1,6 +1,5 @@
 package controller;
 
-import model.Hobby;
 import model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,9 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.RoleService;
 import service.UserService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class AdminController {
@@ -30,26 +26,31 @@ public class AdminController {
     public String home(Model model) {
         model.addAttribute("userList", userService.getAll()); //crew member function name exception
         model.addAttribute("fullRoleList", roleService.getAll());
-        List<Hobby> allhobby = new ArrayList<>();
-        Hobby hobby = new Hobby();
-        hobby.setId("1");
-        hobby.setDescription("fdsfsdfsd");
-        allhobby.add(hobby);
-        model.addAttribute("allHobbies",allhobby);
         model.addAttribute("message", resultMessage);
         resultMessage = null;
         return "admin/adminPanel";
     }
 
+    @RequestMapping(value = "/admin", method = RequestMethod.POST)
+    public String homePost(@RequestParam(value = "idUser") Integer idUser, Model model) {
+        if (userService.delete(idUser))
+            resultMessage = "delete ok";
+        else
+            resultMessage = "delete fail. May be you want delete yourself?";
+        return "redirect:/admin";
+    }
+
+
     @RequestMapping(value = "/newUser", method = RequestMethod.GET)
-    public String newUser(@RequestParam (value = "cmd") String cmd, @RequestParam (value = "idUser") Integer idUser,Model model) {
+    public String newUser(@RequestParam(value = "cmd") String cmd, @RequestParam(value = "idUser", required = false) Integer idUser, Model model) {
         model.addAttribute("fullRoleList", roleService.getAll());
         if (cmd.equals("create")) {
-            // userService.insertWithRoles()
-            model.addAttribute("user",new User());
+            model.addAttribute("user", new User());
+            model.addAttribute("cmd", "create");
         }
         if (cmd.equals("edit")) {
-            model.addAttribute("user",userService.get(idUser));
+            model.addAttribute("user", userService.get(idUser));
+            model.addAttribute("cmd", "edit");
         }
 
         model.addAttribute("message", resultMessage);
@@ -58,14 +59,31 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/newUser", method = RequestMethod.POST)
-    public String commitNewUser(@RequestParam (value = "cmd") String cmd, @ModelAttribute User user, Model model) {
+    public String commitNewUser(@RequestParam(value = "cmd") String cmd, @ModelAttribute User user, Model model) {
         if (cmd.equals("create")) {
-           // userService.insertWithRoles()
+            User userExists = userService.getByName(user.getName());
+            if (userExists != null) {
+                resultMessage = "user exists";
+                return "redirect:/admin";
+            }
+            userService.insertPwdEncode(user);
         }
         if (cmd.equals("edit")) {
+            User userExists = userService.getByName(user.getName());
+            if (userExists != null) {
+                user.setIssueList(userExists.getIssueList());
+                user.setTicketsList(userExists.getTicketsList());
+                user.setPassword(userExists.getPassword());
+                if (userService.saveCompleteObject(user))
+                    resultMessage = "User has been edited successfully";
+                else {
+                    resultMessage = "register user fail";
+                    return "redirect:/main";
+                }
+            }
 
         }
         model.addAttribute("roleList", roleService.getAll());
-        return "admin/newUser";
+        return "redirect:/admin";
     }
 }

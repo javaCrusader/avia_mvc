@@ -51,7 +51,7 @@
         </div>
 
       <!-- start/end picker -->
-        <div th:replace="fragments/datePickerPeriod :: datePickerPeriod">search</div>
+        <div th:replace="fragments/datePickerPeriodDateTime :: datePickerPeriodDateTime"></div>
 
         <div th:if="${cmd} == 'edit'">
             <div class="form-group row">
@@ -105,7 +105,7 @@
             <label class="col-sm-2 col-form-label col-form-label-lg" th:text="${function}"></label>
             <div class="col-sm-10">
                 <select th:field="*{crewMemberList[__${stat.index}__].id}">
-                    <option th:if="${cmd} == 'edit'" value="">Select one</option>
+                    <option th:if="${cmd} == 'edit'" th:value="null" selected>Select one</option>
                     <option th:each="member : ${peopleMap.get(function)}" name="hello" th:value="${member.id}" th:text="${member.name}"></option>
                 </select>
             </div>
