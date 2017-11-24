@@ -1,6 +1,7 @@
 package model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tickets")
@@ -113,6 +114,26 @@ public class Ticket {
     public Ticket setFlight(Flight flight) {
         this.flight = flight;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Ticket record = (Ticket) o;
+
+        if (this.factCost!=record.factCost) return false;
+        if (!this.firstName.equals(record.firstName)) return false;
+        if (!this.lastName.equals(record.lastName)) return false;
+        if (this.passport != record.passport) return false;
+        if (!this.user.equals(record.user)) return false;
+        return this.id.intValue() == record.id.intValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id,factCost,firstName,lastName,surName,passport);
     }
 
     @Override

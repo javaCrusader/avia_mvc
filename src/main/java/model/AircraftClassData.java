@@ -1,6 +1,7 @@
 package model;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -51,5 +52,21 @@ public class AircraftClassData {
 
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AircraftClassData record = (AircraftClassData) o;
+
+        if (!this.name.equals(record.name)) return false;
+        return this.id.intValue() == record.id.intValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, placeDataSet);
     }
 }

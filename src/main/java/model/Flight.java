@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "flights")
@@ -149,10 +150,55 @@ public class Flight {
         Iterator<Ticket> itPlaceTicketList = ticketList.iterator();
         while (itPlaceTicketList.hasNext()) { //лямбы не работают с сущностями еклипслинка
             Ticket iter = itPlaceTicketList.next();
-            if (iter.getId() == idTicket) {
+            if (iter.getId().intValue() == idTicket.intValue()) {
                 itPlaceTicketList.remove();
             }
         }
         return this;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Flight record = (Flight) o;
+
+        if (!this.start.isEqual(record.start)) return false;
+        if (!this.end.isEqual(record.end)) return false;
+        if (!this.name.equals(record.name)) return false;
+        if (!this.startCity.equals(record.startCity)) return false;
+        if (!this.endCity.equals(record.endCity)) return false;
+        if (!this.aircraft.equals(record.aircraft)) return false;
+        if (this.done != record.done) return false;
+        if (!this.aircraft.equals(record.aircraft)) return false;
+        if (this.ticketList.size() != record.ticketList.size())
+            return false;
+        else {
+            int i = 0;
+            for (Ticket ticket : ticketList) {
+                if (!ticket.equals(record.ticketList.get(i)))
+                    return false;
+                i++;
+            }
+        }
+        if (this.crewMemberList.size() != record.crewMemberList.size())
+            return false;
+        else {
+            int i = 0;
+            for (CrewMember member : crewMemberList) {
+                if (!member.equals(record.crewMemberList.get(i)))
+                    return false;
+                i++;
+            }
+        }
+        return this.id.intValue() == record.id.intValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, start, end, startCity, endCity, done);
+    }
+
+
 }

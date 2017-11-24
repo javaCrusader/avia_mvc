@@ -21,16 +21,18 @@ public class Country {
         return id;
     }
 
-    public void setId(Integer id) {
+    public Country setId(Integer id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public Country setName(String name) {
         this.name = name;
+        return this;
     }
 
     public List<City> getCityList() {

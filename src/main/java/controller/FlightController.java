@@ -144,7 +144,6 @@ public class FlightController {
             resultMessage = cmd.equals("create") ? "create flight ok" : "update flight ok";
         else
             resultMessage = cmd.equals("create") ? "create flight error" : "update flight error";
-        List<CrewMember> memberList = crewService.getAll();
         return "redirect:/flights";
     }
 

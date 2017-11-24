@@ -2,6 +2,7 @@ package model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "city_list")
@@ -82,6 +83,24 @@ public class City {
 
     public void setEndFlightList(List<Flight> endFlightList) {
         this.endFlightList = endFlightList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        City record = (City) o;
+
+        if (this.longitude != record.longitude) return false;
+        if (this.latitude != record.latitude) return false;
+        if (!this.name.equals(record.name)) return false;
+        return this.id.intValue() == record.id.intValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, latitude, longitude);
     }
 
 }

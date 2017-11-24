@@ -3,6 +3,7 @@ package model;
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "issues")
@@ -40,13 +41,6 @@ public class Issue {
         return this;
     }
 
-    @Transient
-    private SimpleDateFormat dateFmt;
-
-    {
-        dateFmt = new SimpleDateFormat("dd/M/yyyy H:mm");
-    }
-
     public Integer getId() {
         return id;
     }
@@ -63,11 +57,6 @@ public class Issue {
         this.user = user;
     }
 
-
-    public SimpleDateFormat getDateFmt() {
-        return dateFmt;
-    }
-
     public Date getCreated() {
         return created;
     }
@@ -82,5 +71,21 @@ public class Issue {
 
     public void setProblem(String problem) {
         this.problem = problem;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Issue record = (Issue) o;
+        if (this.closed != record.closed) return false;
+        if (this.created.getTime() != record.getCreated().getTime()) return false;
+        return this.problem.equals(record.problem) && this.id.intValue() == record.id.intValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, problem,created,closed);
     }
 }

@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "place_data")
@@ -111,10 +112,29 @@ public class AircraftPlaceInfo {
         Iterator<Ticket> itPlaceTicketList = ticketList.iterator();
         while (itPlaceTicketList.hasNext()) { //лямбы не работают с сущностями еклипслинка
             Ticket iter = itPlaceTicketList.next();
-            if (iter.getId() == idTicket) {
+            if (iter.getId().intValue() == idTicket.intValue()) {
                 itPlaceTicketList.remove();
             }
         }
         return this;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AircraftPlaceInfo record = (AircraftPlaceInfo) o;
+
+        if (this.capacity != record.capacity) return false;
+        if (this.price != record.price) return false;
+        if (!this.airClass.equals(record.airClass)) return false;
+        return this.id.intValue() == record.id.intValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, price, capacity, airClass);
+    }
+
 }

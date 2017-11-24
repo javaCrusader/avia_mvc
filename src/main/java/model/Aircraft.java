@@ -3,6 +3,7 @@ package model;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "aircrafts")
@@ -76,4 +77,31 @@ public class Aircraft {
         placeInfoList.add(placeInfo.setAircraft(this));
         return this;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Aircraft record = (Aircraft) o;
+
+        if (!this.getName().equals(record.name)) return false;
+        if (this.placeInfoList.size() != record.placeInfoList.size())
+            return false;
+        else {
+            int i = 0;
+            for (AircraftPlaceInfo place : placeInfoList) {
+                if (!place.equals(record.placeInfoList.get(i)))
+                    return false;
+                i++;
+            }
+        }
+        return this.id.intValue() == record.id.intValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, placeInfoList, flight);
+    }
+
 }

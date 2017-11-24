@@ -14,6 +14,7 @@ import repository.IssueRepository;
 import repository.RoleRepository;
 import repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,7 +45,7 @@ public class UserService {
      */
     public boolean insert(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        Set<Role> roles = new HashSet<>();
+        List<Role> roles = new ArrayList<>();
         roles.add(roleRepository.findByName("ROLE_USER"));
         roles.add(roleRepository.findByName("ROLE_ADMIN"));
         user.setRoleList(roles);

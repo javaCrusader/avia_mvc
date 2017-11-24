@@ -6,10 +6,7 @@ import org.springframework.format.annotation.NumberFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -23,9 +20,6 @@ public class User {
     private String name;
 
     private String password;
-
-    @Transient
-    private String passwordConfirm;
 
     private String firstName;
 
@@ -53,7 +47,7 @@ public class User {
 
     @ManyToMany
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roleList;
+    private List<Role> roleList;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private List<Issue> issueList;
@@ -61,7 +55,7 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, Set<Role> roles) {
+    public User(String username, String password, List<Role> roles) {
         this.name = username;
         this.password = password;
         this.roleList = roles;
@@ -171,15 +165,11 @@ public class User {
         this.password = password;
     }
 
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
-    public Set<Role> getRoleList() {
+    public List<Role> getRoleList() {
         return roleList;
     }
 
-    public void setRoleList(Set<Role> roles) {
+    public void setRoleList(List<Role> roles) {
         this.roleList = roles;
     }
 
@@ -195,11 +185,52 @@ public class User {
         Iterator<Ticket> itPlaceTicketList = ticketsList.iterator();
         while (itPlaceTicketList.hasNext()) { //лямбы не работают с сущностями еклипслинка
             Ticket iter = itPlaceTicketList.next();
-            if (iter.getId() == idTicket) {
+            if (iter.getId().intValue() == idTicket.intValue()) {
                 itPlaceTicketList.remove();
             }
         }
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User record = (User) o;
+
+        if (this.passport != record.getPassport()) return false;
+        if (!this.firstName.equals(record.firstName)) return false;
+        if (!this.lastName.equals(record.lastName)) return false;
+        if (!this.email.equals(record.email)) return false;
+        if (!this.creditCard.equals(record.creditCard)) return false;
+        if (this.roleList.size() != record.roleList.size())
+            return false;
+        else {
+            int i = 0;
+            for (Role role : roleList) {
+                if (!role.equals(record.roleList.get(i)))
+                    return false;
+                i++;
+            }
+        }
+        if (this.issueList.size() != record.issueList.size())
+            return false;
+        else {
+            int i = 0;
+            for (Issue issue : issueList) {
+                if (!issue.equals(record.issueList.get(i)))
+                    return false;
+                i++;
+            }
+        }
+
+        return this.id.intValue() == record.id.intValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, address, firstName, lastName, passport, creditCard, email);
     }
 
 

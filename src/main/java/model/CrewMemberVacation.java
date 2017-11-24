@@ -2,6 +2,7 @@ package model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
 
 @Entity
@@ -67,5 +68,24 @@ public class CrewMemberVacation {
     public void setEnd(LocalDate end) {
         this.end = end;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CrewMemberVacation record = (CrewMemberVacation) o;
+
+        if (!this.start.isEqual(record.start)) return false;
+        if (!this.end.isEqual(record.end)) return false;
+        return this.id.intValue() == record.id.intValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, start, end);
+    }
+
+
 
 }
