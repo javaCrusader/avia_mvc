@@ -60,31 +60,4 @@ public class IOCity {
         return new CityWrapper(list);
     }
 
-    public List<String> save(CityWrapper data, File target) throws IOException {
-        List<String> errors = new ArrayList<>();
-        if (data.getCityList().size() < 1) {
-            errors.add("EMPTY city data");
-            return errors;
-        }
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(new FileWriter(target));
-            bw.write("Id;City name;Country name\n");
-            for (City rec : data.getCityList()) {
-                bw.write(rec.getId() + ";" + rec.getName() + "\n");
-            }
-        } catch (IOException e) {
-            errors.add(e.getLocalizedMessage());
-            return errors;
-        } finally {
-            if (bw != null) try {
-                bw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                errors.add(e.getLocalizedMessage());
-            }
-        }
-        return errors;
-    }
-
 }

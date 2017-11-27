@@ -14,7 +14,6 @@ public class RoleFormatter implements Formatter<model.Role> {
 
     @Override
     public String print(Role role, Locale locale) {
-        logger.info("osdsd");
         return String.valueOf(role.getId());
 
     }

@@ -28,7 +28,7 @@
     <!-- Define EclipseLink JPA Vendor Adapter -->
     <beans:bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
 
-        <beans:property name="databasePlatform" value="rg.eclipse.persistence.platform.database.H2Platform"/>
+        <beans:property name="databasePlatform" value="org.eclipse.persistence.platform.database.H2Platform"/>
         <beans:property name="generateDdl" value="true"/>
         <beans:property name="showSql" value="true"/>
     </beans:bean>
@@ -40,7 +40,6 @@
         <beans:property name="packagesToScan" value="model"/>
         <beans:property name="jpaProperties">
             <beans:props>
-                <beans:prop key="eclipselink.target-database">org.eclipse.persistence.platform.database.H2Platform</beans:prop>
                 <beans:prop key="eclipselink.ddl-generation">drop-and-create-tables</beans:prop>
                 <beans:prop key="eclipselink.weaving">false</beans:prop>
             </beans:props>
